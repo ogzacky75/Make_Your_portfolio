@@ -36,6 +36,18 @@ class UserResource(Resource):
         db.session.commit()
         return {'message': 'User deleted successfully'}, 200
 
+    def patch(self, user_id):
+        user = User.query.get(user_id)
+        if not user:
+            return {'error': 'User not found'}, 404
+        data = request.get_json() or {}
+
+        for field in ('username', 'email', 'password'):
+            if field in data:
+                setattr(user, field, data[field])
+        db.session.commit()
+        return user.to_dict(), 200
+
 
 api.add_resource(UserListResource, '/users')
 api.add_resource(UserResource, '/users/<int:user_id>')

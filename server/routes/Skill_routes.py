@@ -10,13 +10,29 @@ class SkillListResource(Resource):
         return [s.to_dict() for s in skills], 200
 
     def post(self):
-        data = request.get_json()
-        s = Skill(portfolio_id=data.get('portfolio_id'), skill_name=data.get('skill_name'))
+        data = request.get_json() or {}
+        if 'skill_name' not in data or 'portfolio_id' not in data:
+            return {'error': 'portfolio_id and skill_name are required'}, 400
+
+        s = Skill(
+            portfolio_id=data['portfolio_id'],
+            skill_name=data['skill_name']
+        )
         db.session.add(s)
         db.session.commit()
         return s.to_dict(), 201
 
 class SkillResource(Resource):
+    def patch(self, skill_id):
+        s = Skill.query.get(skill_id)
+        if not s:
+            return {'error': 'Skill not found'}, 404
+
+        data = request.get_json()
+        s.skill_name = data.get('skill_name', s.skill_name)
+        db.session.commit()
+        return s.to_dict(), 200
+
     def delete(self, skill_id):
         s = Skill.query.get(skill_id)
         if not s:
