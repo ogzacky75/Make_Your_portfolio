@@ -1,5 +1,5 @@
 from app import app
-from models import db, User,Template, Favorite,Portfolio, PersonalInfo, Education, Experience, Project, Skill
+from models import db, User,Template, Favorite, Portfolio, PersonalInfo, Education, Experience, Project, Skill
 from datetime import datetime, date
 
 def seed_users():
@@ -57,6 +57,34 @@ def seed_templates():
             image = '',
             description = 'A teachnical and structured portfolio template tailored for developers. '
         )
+        db.session.add_all([template1, template2, template3, template4])
+        db.session.commit()
+
+def seed_favorite():
+    with app.db.app_context():
+        favorite1 = Favorite(
+            user_id = 1,
+            template_id = 1  
+        )
+
+        favorite2 = Favorite(
+            user_id = 2,
+            template_id = 2
+        )
+
+        favorite3 = Favorite(
+            user_id = 3,
+            template_id = 3
+        )
+
+        favorite4 = Favorite(
+            user_id = 4,
+            favorite_id = 4
+        )
+        db.session.add_all([favorite1, favorite2, favorite3, favorite4])
+        db.session.commit()
+
+
 
 
 
