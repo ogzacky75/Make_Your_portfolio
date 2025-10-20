@@ -5,6 +5,8 @@ click==8.1.8
 cryptography==46.0.3
 Flask==3.0.3
 Flask-RESTful==0.3.10
+Flask-SQLAlchemy==3.1.1
+greenlet==3.1.1
 importlib_metadata==8.5.0
 itsdangerous==2.2.0
 Jinja2==3.1.6
@@ -13,6 +15,7 @@ MarkupSafe==2.1.5
 pycparser==2.23
 pytz==2025.2
 six==1.17.0
+SQLAlchemy==2.0.44
 typing_extensions==4.13.2
 Werkzeug==3.0.6
 zipp==3.20.2
