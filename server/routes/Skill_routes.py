@@ -1,24 +1,29 @@
-from flask import Flask, request, jsonify
+from flask import request
 from flask_restful import Resource, Api
 from models import db, Skill
 
 api = Api()
 
+class SkillListResource(Resource):
+    def get(self):
+        skills = Skill.query.all()
+        return [s.to_dict() for s in skills], 200
+
+    def post(self):
+        data = request.get_json()
+        s = Skill(portfolio_id=data.get('portfolio_id'), skill_name=data.get('skill_name'))
+        db.session.add(s)
+        db.session.commit()
+        return s.to_dict(), 201
+
 class SkillResource(Resource):
-	def post(self):
-			data = request.get_json()
-			
-			if not data or 'skill_name' not in data or 'portfolio_id' not in data:
-				return {'error': 'skill_name and portfolio_id are required'}, 400
+    def delete(self, skill_id):
+        s = Skill.query.get(skill_id)
+        if not s:
+            return {'error': 'Skill not found'}, 404
+        db.session.delete(s)
+        db.session.commit()
+        return {'message': 'Skill deleted'}, 200
 
-			new_skill = Skill(
-				skill_name=data['skill_name'],
-				portfolio_id=data['portfolio_id']
-			)
-			db.session.add(new_skill)
-			db.session.commit()
-
-			return new_skill.to_dict(), 201
-
-
-api.add_resource(SkillResource, '/skill')
+api.add_resource(SkillListResource, '/skills')
+api.add_resource(SkillResource, '/skills/<int:skill_id>')
