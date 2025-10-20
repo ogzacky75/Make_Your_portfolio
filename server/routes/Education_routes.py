@@ -1,5 +1,6 @@
+from flask import Flask, request, jsonify
 from flask_restful import Resource, Api
-from models import Education
+from models import db, Education
 
 api = Api()
 

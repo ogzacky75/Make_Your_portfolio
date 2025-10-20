@@ -1,5 +1,6 @@
+from flask import Flask, request, jsonify
 from flask_restful import Resource, Api
-from models import Project
+from models import db, Project
 
 api = Api()
 
