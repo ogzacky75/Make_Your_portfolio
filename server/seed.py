@@ -84,7 +84,40 @@ def seed_favorite():
         db.session.add_all([favorite1, favorite2, favorite3, favorite4])
         db.session.commit()
 
+def seed_portfolio():
+    with app.db.app_context():
+        portfolios = Portfolio (
+            user_id = 1,
+            template_id = 1,
+            title =  "Alex Johnson - Full Stack Developer",
+            created_at = datetime.utcnow(),
+            updated_at = datetime.utcnow()
+        )
 
+        Portfolio = Portfolio(
+            user_id = 1,
+            template_id = 2,
+            title = "Sarah James - UX Designer",
+            created_at = datetime.utcnow(),
+            updated_at = datetime.utcnow()
+        )
 
+        Portfolio = Portfolio(
+            user_id = 2,
+            template_id  =3,
+            title = "Alex Jake - Creative Projects",
+            created_at = datetime.utcnow(),
+            updated_at = datetime.utcnow()
+        )
 
+        Portfolio = Portfolio(
+            user_id = 3,
+            template_id = 4,
+            title = "Jasmine Keith - Software Engineer",
+            created_at = datetime.utcnow()
+            updated_at = datetime.utcnow()
+        )
 
+        db.session.aadd_all([portfolios])
+        db.session.commit()
+        
