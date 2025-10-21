@@ -1,38 +1,73 @@
-from flask import Flask, request, jsonify
+from flask import request
 from flask_restful import Resource, Api
 from models import db, Experience
 
 api = Api()
 
-class ExperienceListResource(Resource):
-	def get(self):
-		experience = Experience.query.all()
-		return [e.to_dict() for e in experience], 200
-	
-	def post(self):
-		data = request.get_json()
-		new_experience = Experience(
-			portfolio_id=data.get('portfolio_id'),
-			job_title=data.get('job_title'),
-			company=data.get('company'),
-			start_date=data.get('start_date'),
-			end_date=data.get('end_date'),
-			description=data.get('description')
-		)
+def serialize_experience(exp):
+    return {
+        "id": exp.id,
+        "portfolio_id": exp.portfolio_id,
+        "job_title": exp.job_title,
+        "company": exp.company,
+        "start_date": exp.start_date,
+        "end_date": exp.end_date,
+        "description": exp.description
+    }
 
-		db.session.add(new_experience)
-		db.session.commit()
-		return new_experience.to_dict(), 201
-	
+class ExperienceListResource(Resource):
+    def get(self):
+        experiences = Experience.query.all()
+        return [serialize_experience(e) for e in experiences], 200
+
+    def post(self):
+        data = request.get_json() or {}
+        required_fields = ['portfolio_id', 'job_title', 'company', 'start_date']
+        if not all(field in data for field in required_fields):
+            return {'error': f"{', '.join(required_fields)} are required"}, 400
+
+        new_exp = Experience(
+            portfolio_id=data['portfolio_id'],
+            job_title=data['job_title'],
+            company=data['company'],
+            start_date=data['start_date'],
+            end_date=data.get('end_date'),
+            description=data.get('description')
+        )
+
+        db.session.add(new_exp)
+        db.session.commit()
+        return serialize_experience(new_exp), 201
+
+
 class ExperienceResource(Resource):
-	def delete(self, experience_id):
-		experience = Experience.query.get(experience_id)
-		if not experience:
-			return {'error': 'Experience not found'}, 404
-		db.session.delete(experience)
-		db.session.commit()
-		return {'message': 'Experience deleted'}, 200
-		
+    def get(self, experience_id):
+        exp = Experience.query.get(experience_id)
+        if not exp:
+            return {'error': 'Experience not found'}, 404
+        return serialize_experience(exp), 200
+
+    def patch(self, experience_id):
+        exp = Experience.query.get(experience_id)
+        if not exp:
+            return {'error': 'Experience not found'}, 404
+
+        data = request.get_json() or {}
+        for field in ['job_title', 'company', 'start_date', 'end_date', 'description']:
+            if field in data:
+                setattr(exp, field, data[field])
+
+        db.session.commit()
+        return serialize_experience(exp), 200
+
+    def delete(self, experience_id):
+        exp = Experience.query.get(experience_id)
+        if not exp:
+            return {'error': 'Experience not found'}, 404
+
+        db.session.delete(exp)
+        db.session.commit()
+        return {'message': 'Experience deleted'}, 200
 
 
 api.add_resource(ExperienceListResource, '/experience')

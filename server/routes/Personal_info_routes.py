@@ -4,20 +4,32 @@ from models import db, PersonalInfo
 
 api = Api()
 
+def serialize_personal_info(pi):
+    return {
+        "id": pi.id,
+        "portfolio_id": pi.portfolio_id,
+        "name": pi.name,
+        "photo_url": pi.photo_url,
+        "contact_email": pi.contact_email,
+        "phone": pi.phone,
+        "linkedin": pi.linkedin,
+        "github": pi.github,
+        "website": pi.website
+    }
+
 class PersonalInfoListResource(Resource):
     def get(self):
         personal_infos = PersonalInfo.query.all()
-        return [pi.to_dict() for pi in personal_infos], 200
+        return [serialize_personal_info(pi) for pi in personal_infos], 200
 
     def post(self):
-        data = request.get_json()
-
-        if not data or 'portfolio_id' not in data or 'name' not in data:
+        data = request.get_json() or {}
+        if 'portfolio_id' not in data or 'name' not in data:
             return {'error': 'portfolio_id and name are required'}, 400
 
         new_pi = PersonalInfo(
             portfolio_id=data['portfolio_id'],
-            name=data.get('name'),
+            name=data['name'],
             photo_url=data.get('photo_url'),
             contact_email=data.get('contact_email'),
             phone=data.get('phone'),
@@ -28,10 +40,29 @@ class PersonalInfoListResource(Resource):
 
         db.session.add(new_pi)
         db.session.commit()
-        return new_pi.to_dict(), 201
+        return serialize_personal_info(new_pi), 201
 
 
 class PersonalInfoResource(Resource):
+    def get(self, info_id):
+        pi = PersonalInfo.query.get(info_id)
+        if not pi:
+            return {'error': 'PersonalInfo not found'}, 404
+        return serialize_personal_info(pi), 200
+
+    def patch(self, info_id):
+        pi = PersonalInfo.query.get(info_id)
+        if not pi:
+            return {'error': 'PersonalInfo not found'}, 404
+
+        data = request.get_json() or {}
+        for field in ['name', 'photo_url', 'contact_email', 'phone', 'linkedin', 'github', 'website']:
+            if field in data:
+                setattr(pi, field, data[field])
+
+        db.session.commit()
+        return serialize_personal_info(pi), 200
+
     def delete(self, info_id):
         pi = PersonalInfo.query.get(info_id)
         if not pi:
