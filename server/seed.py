@@ -124,6 +124,6 @@ def seed_portfolio():
 def seed_personalinfo():
     with app.db.app_context():
         personalinfo = PersonalInfo(
-            
+
         )
-        
+    
