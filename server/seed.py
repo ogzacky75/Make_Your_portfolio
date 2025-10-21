@@ -120,4 +120,10 @@ def seed_portfolio():
 
         db.session.aadd_all([portfolios])
         db.session.commit()
+
+def seed_personalinfo():
+    with app.db.app_context():
+        personalinfo = PersonalInfo(
+            
+        )
         
