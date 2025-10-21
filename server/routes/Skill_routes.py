@@ -4,40 +4,48 @@ from models import db, Skill
 
 api = Api()
 
+def serialize_skill(skill):
+    return {
+        "id": skill.id,
+        "portfolio_id": skill.portfolio_id,
+        "skill_name": skill.skill_name
+    }
+
 class SkillListResource(Resource):
     def get(self):
         skills = Skill.query.all()
-        return [s.to_dict() for s in skills], 200
+        return [serialize_skill(s) for s in skills], 200
 
     def post(self):
         data = request.get_json() or {}
         if 'skill_name' not in data or 'portfolio_id' not in data:
             return {'error': 'portfolio_id and skill_name are required'}, 400
 
-        s = Skill(
+        new_skill = Skill(
             portfolio_id=data['portfolio_id'],
             skill_name=data['skill_name']
         )
-        db.session.add(s)
+        db.session.add(new_skill)
         db.session.commit()
-        return s.to_dict(), 201
+        return serialize_skill(new_skill), 201
 
 class SkillResource(Resource):
     def patch(self, skill_id):
-        s = Skill.query.get(skill_id)
-        if not s:
+        skill = Skill.query.get(skill_id)
+        if not skill:
             return {'error': 'Skill not found'}, 404
 
-        data = request.get_json()
-        s.skill_name = data.get('skill_name', s.skill_name)
+        data = request.get_json() or {}
+        skill.skill_name = data.get('skill_name', skill.skill_name)
         db.session.commit()
-        return s.to_dict(), 200
+        return serialize_skill(skill), 200
 
     def delete(self, skill_id):
-        s = Skill.query.get(skill_id)
-        if not s:
+        skill = Skill.query.get(skill_id)
+        if not skill:
             return {'error': 'Skill not found'}, 404
-        db.session.delete(s)
+
+        db.session.delete(skill)
         db.session.commit()
         return {'message': 'Skill deleted'}, 200
 
