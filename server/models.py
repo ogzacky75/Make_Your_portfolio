@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy_serializer import SerializerMixin
 from datetime import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
 
 db = SQLAlchemy()
 
@@ -14,6 +15,12 @@ class User(db.Model, SerializerMixin):
 
     favorites = db.relationship('Favorite', back_populates='user', cascade='all, delete-orphan')
     portfolios = db.relationship('Portfolio', back_populates='user', cascade='all, delete-orphan')
+
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+    
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
 
 class Template(db.Model, SerializerMixin):
     __tablename__ = 'templates'

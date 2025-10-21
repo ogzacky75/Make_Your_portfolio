@@ -1,10 +1,11 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 from datetime import timedelta
 import os
+
+from models import db
 
 from routes.Skill_routes import api as skill_api
 from routes.Education_routes import api as education_api
@@ -15,8 +16,6 @@ from routes.Portfolio_routes import api as portfolio_api
 from routes.Template_routes import api as template_api
 from routes.Favorites_routes import api as favorite_api
 
-
-db = SQLAlchemy()
 bcrypt = Bcrypt()
 jwt = JWTManager()
 
