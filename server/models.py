@@ -9,7 +9,7 @@ db = SQLAlchemy()
 class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
     serialize_rules = (
-        '-favorites.user',      # prevent recursion
+        '-favorites.user',      
         '-portfolios.user',
     )
 
