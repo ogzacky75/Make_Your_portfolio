@@ -1,5 +1,8 @@
 {
   "dependencies": {
-    "vite": "^7.1.11"
+    "formik": "^2.4.6",
+    "react-router-dom": "^7.9.4",
+    "vite": "^7.1.11",
+    "yup": "^1.7.1"
   }
 }
