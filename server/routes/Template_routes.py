@@ -9,7 +9,8 @@ def serialize_template(template):
         "id": template.id,
         "name": template.name,
         "image": template.image,
-        "description": template.description
+        "description": template.description,
+        "preview_url": template.preview_url
     }
 
 
@@ -19,30 +20,35 @@ class TemplateListResource(Resource):
         return [serialize_template(t) for t in templates], 200
 
     def post(self):
-        data = request.get_json() or {}
-        if not data.get("name"):
+        data = request.get_json()
+        name = data.get("name")
+        image = data.get("image")
+        description = data.get("description")
+        preview_url = data.get("preview_url")
+
+        if not name:
             return {"error": "Template name is required"}, 400
 
-        new_template = Template(
-            name=data.get("name"),
-            image=data.get("image"),
-            description=data.get("description")
+        template = Template(
+            name=name,
+            image=image,
+            description=description,
+            preview_url=preview_url
         )
-        db.session.add(new_template)
+
+        db.session.add(template)
         db.session.commit()
-        return serialize_template(new_template), 201
+
+        return {"message": "Template added successfully", "template": serialize_template(template)}, 201
 
 
-class TemplateResource(Resource):
-    def delete(self, template_id):
-        template = Template.query.get(template_id)
+class TemplateDetailResource(Resource):
+    def get(self, id):
+        template = Template.query.get(id)
         if not template:
             return {"error": "Template not found"}, 404
-
-        db.session.delete(template)
-        db.session.commit()
-        return {"message": "Template deleted"}, 200
+        return serialize_template(template), 200
 
 
-api.add_resource(TemplateListResource, "/templates")
-api.add_resource(TemplateResource, "/templates/<int:template_id>")
+api.add_resource(TemplateListResource, '/templates')
+api.add_resource(TemplateDetailResource, '/templates/<int:id>')

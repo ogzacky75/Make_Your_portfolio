@@ -1,113 +1,60 @@
-from flask import request
+from flask import request, jsonify
 from flask_restful import Resource, Api
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from models import db, User
-from werkzeug.security import generate_password_hash
 
 api = Api()
 
-
-def serialize_portfolio(portfolio):
-    return {
-        "id": portfolio.id,
-        "title": portfolio.title,
-        "skills": [{"id": s.id, "skill_name": s.skill_name} for s in getattr(portfolio, "skills", [])],
-        "education": [
-            {
-                "id": e.id,
-                "institution": e.institution,
-                "degree": e.degree,
-                "start_year": e.start_year,
-                "end_year": e.end_year
-            } for e in getattr(portfolio, "education", [])
-        ],
-        "experience": [
-            {
-                "id": ex.id,
-                "job_title": ex.job_title,
-                "company": ex.company,
-                "start_date": ex.start_date,
-                "end_date": ex.end_date,
-                "description": ex.description
-            } for ex in getattr(portfolio, "experience", [])
-        ],
-        "projects": [
-            {
-                "id": pr.id,
-                "project_name": pr.project_name,
-                "description": pr.description,
-                "image_url": pr.image_url,
-                "project_link": pr.project_link
-            } for pr in getattr(portfolio, "projects", [])
-        ]
-    }
-
-
-def serialize_user(user):
-    return {
-        "id": user.id,
-        "username": user.username,
-        "email": user.email,
-        "portfolios": [serialize_portfolio(p) for p in getattr(user, "portfolios", [])]
-    }
-
-
-
-class UserListResource(Resource):
-    def get(self):
-        users = User.query.all()
-        return [serialize_user(u) for u in users], 200
-
+class RegisterResource(Resource):
     def post(self):
-        data = request.get_json() or {}
-        required = ("username", "email", "password")
-        if not all(k in data for k in required):
-            return {"error": "username, email, and password are required"}, 400
+        data = request.get_json()
+        username = data.get("username")
+        email = data.get("email")
+        password = data.get("password")
 
-        hashed_password = generate_password_hash(data["password"])
-        new_user = User(
-            username=data["username"],
-            email=data["email"],
-            password=hashed_password
-        )
+        if not username or not email or not password:
+            return {"error": "All fields are required"}, 400
 
-        db.session.add(new_user)
+        if User.query.filter((User.username == username) | (User.email == email)).first():
+            return {"error": "Username or email already exists"}, 400
+
+        user = User(username=username, email=email)
+        user.set_password(password)
+
+        db.session.add(user)
         db.session.commit()
-        return serialize_user(new_user), 201
+
+        return {"message": "User registered successfully"}, 201
 
 
-class UserResource(Resource):
-    def get(self, user_id):
-        user = User.query.get(user_id)
+class LoginResource(Resource):
+    def post(self):
+        data = request.get_json()
+        email = data.get("email")
+        password = data.get("password")
+
+        user = User.query.filter_by(email=email).first()
+        if not user or not user.check_password(password):
+            return {"error": "Invalid email or password"}, 401
+
+        access_token = create_access_token(identity=user.id)
+        return {
+            "message": "Login successful",
+            "access_token": access_token,
+            "user": {"id": user.id, "username": user.username, "email": user.email}
+        }, 200
+
+
+class MeResource(Resource):
+    @jwt_required()
+    def get(self):
+        current_user_id = get_jwt_identity()
+        user = User.query.get(current_user_id)
         if not user:
             return {"error": "User not found"}, 404
-        return serialize_user(user), 200
-
-    def delete(self, user_id):
-        user = User.query.get(user_id)
-        if not user:
-            return {"error": "User not found"}, 404
-
-        db.session.delete(user)
-        db.session.commit()
-        return {"message": "User deleted successfully"}, 200
-
-    def patch(self, user_id):
-        user = User.query.get(user_id)
-        if not user:
-            return {"error": "User not found"}, 404
-
-        data = request.get_json() or {}
-
-        if "username" in data:
-            user.username = data["username"]
-        if "email" in data:
-            user.email = data["email"]
-        if "password" in data:
-            user.password = generate_password_hash(data["password"])
-
-        db.session.commit()
-        return serialize_user(user), 200
+        return {"id": user.id, "username": user.username, "email": user.email}, 200
 
 
-api.add_resource(UserListResource, "/users")
-api.add_resource(UserResource, "/users/<int:user_id>")
+api.add_resource(RegisterResource, '/register')
+api.add_resource(LoginResource, '/login')
+api.add_resource(MeResource, '/me')

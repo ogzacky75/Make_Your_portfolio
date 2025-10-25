@@ -2,6 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy_serializer import SerializerMixin
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
+from uuid import uuid4
 
 db = SQLAlchemy()
 
@@ -14,7 +15,7 @@ class User(db.Model, SerializerMixin):
     )
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String)
+    username = db.Column(db.String, unique=True, nullable=False)
     email = db.Column(db.Text, unique=True, nullable=False)
     password = db.Column(db.Text, nullable=False)
 
@@ -39,6 +40,7 @@ class Template(db.Model, SerializerMixin):
     name = db.Column(db.String)
     image = db.Column(db.Text)
     description = db.Column(db.Text)
+    preview_url = db.Column(db.Text)
 
     favorites = db.relationship('Favorite', back_populates='template', cascade='all, delete-orphan')
     portfolios = db.relationship('Portfolio', back_populates='template', cascade='all, delete-orphan')
@@ -75,19 +77,23 @@ class Portfolio(db.Model, SerializerMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     template_id = db.Column(db.Integer, db.ForeignKey('templates.id'))
     title = db.Column(db.String)
+    slug = db.Column(db.String, unique=True, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     user = db.relationship('User', back_populates='portfolios')
     template = db.relationship('Template', back_populates='portfolios')
 
-    personal_info = db.relationship(
-        'PersonalInfo', back_populates='portfolio', uselist=False, cascade='all, delete-orphan'
-    )
+    personal_info = db.relationship('PersonalInfo', back_populates='portfolio', uselist=False, cascade='all, delete-orphan')
     education = db.relationship('Education', back_populates='portfolio', cascade='all, delete-orphan')
     experience = db.relationship('Experience', back_populates='portfolio', cascade='all, delete-orphan')
     projects = db.relationship('Project', back_populates='portfolio', cascade='all, delete-orphan')
     skills = db.relationship('Skill', back_populates='portfolio', cascade='all, delete-orphan')
+
+    def generate_slug(self, username):
+        unique_part = uuid4().hex[:6]
+        self.slug = f"{username}-{unique_part}"
+
 
 
 class PersonalInfo(db.Model, SerializerMixin):

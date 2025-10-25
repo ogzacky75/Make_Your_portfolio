@@ -7,10 +7,6 @@ import os
 
 from models import db
 
-from routes.Skill_routes import api as skill_api
-from routes.Education_routes import api as education_api
-from routes.Experience_routes import api as experience_api
-from routes.Project_routes import api as project_api
 from routes.User_routes import api as user_api
 from routes.Portfolio_routes import api as portfolio_api
 from routes.Template_routes import api as template_api
@@ -34,10 +30,6 @@ def create_app():
     jwt.init_app(app)
     CORS(app)
 
-    skill_api.init_app(app)
-    education_api.init_app(app)
-    experience_api.init_app(app)
-    project_api.init_app(app)
     user_api.init_app(app)
     portfolio_api.init_app(app)
     template_api.init_app(app)

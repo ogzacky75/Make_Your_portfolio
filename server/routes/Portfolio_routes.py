@@ -1,23 +1,33 @@
 from flask import request
 from flask_restful import Resource, Api
-from models import db, Portfolio
+from flask_jwt_extended import jwt_required, get_jwt_identity
+from models import db, Portfolio, User, Template
 
 api = Api()
 
+
+# --- SERIALIZER --- #
 def serialize_portfolio(portfolio):
     return {
         "id": portfolio.id,
-        "user_id": portfolio.user_id,
-        "template_id": portfolio.template_id,
+        "slug": portfolio.slug,
         "title": portfolio.title,
+        "user": {
+            "id": portfolio.user.id,
+            "username": portfolio.user.username,
+            "email": portfolio.user.email
+        } if portfolio.user else None,
+        "template": {
+            "id": portfolio.template.id,
+            "name": portfolio.template.name,
+            "image": portfolio.template.image,
+            "preview_url": portfolio.template.preview_url
+        } if portfolio.template else None,
         "created_at": portfolio.created_at.isoformat() if portfolio.created_at else None,
         "updated_at": portfolio.updated_at.isoformat() if portfolio.updated_at else None,
-        "skills": [{"id": s.id, "skill_name": s.skill_name} for s in getattr(portfolio, "skills", [])],
-        "education": [{"id": e.id, "institution": e.institution, "degree": e.degree} for e in getattr(portfolio, "education", [])],
-        "experience": [{"id": ex.id, "company": ex.company, "job_title": ex.job_title} for ex in getattr(portfolio, "experience", [])],
-        "projects": [{"id": pr.id, "project_name": pr.project_name, "description": pr.description} for pr in getattr(portfolio, "projects", [])],
+
+        # Related data
         "personal_info": {
-            "id": portfolio.personal_info.id,
             "name": portfolio.personal_info.name,
             "photo_url": portfolio.personal_info.photo_url,
             "contact_email": portfolio.personal_info.contact_email,
@@ -25,39 +35,105 @@ def serialize_portfolio(portfolio):
             "linkedin": portfolio.personal_info.linkedin,
             "github": portfolio.personal_info.github,
             "website": portfolio.personal_info.website
-        } if portfolio.personal_info else None
+        } if portfolio.personal_info else None,
+
+        "education": [
+            {
+                "institution": e.institution,
+                "degree": e.degree,
+                "start_year": e.start_year,
+                "end_year": e.end_year
+            }
+            for e in portfolio.education
+        ],
+
+        "experience": [
+            {
+                "job_title": ex.job_title,
+                "company": ex.company,
+                "start_date": ex.start_date,
+                "end_date": ex.end_date,
+                "description": ex.description
+            }
+            for ex in portfolio.experience
+        ],
+
+        "projects": [
+            {
+                "project_name": pr.project_name,
+                "description": pr.description,
+                "image_url": pr.image_url,
+                "project_link": pr.project_link
+            }
+            for pr in portfolio.projects
+        ],
+
+        "skills": [
+            {"skill_name": s.skill_name}
+            for s in portfolio.skills
+        ]
     }
 
+
 class PortfolioListResource(Resource):
+    @jwt_required()
     def get(self):
-        portfolios = Portfolio.query.all()
+        """Get all portfolios for the authenticated user."""
+        current_user_id = get_jwt_identity()
+        portfolios = Portfolio.query.filter_by(user_id=current_user_id).all()
         return [serialize_portfolio(p) for p in portfolios], 200
 
+    @jwt_required()
     def post(self):
-        data = request.get_json() or {}
-        new_portfolio = Portfolio(
-            user_id=data.get('user_id'),
-            template_id=data.get('template_id'),
-            title=data.get('title')
-        )
-        db.session.add(new_portfolio)
-        db.session.commit()
-        return serialize_portfolio(new_portfolio), 201
+        """Create a new portfolio for the authenticated user."""
+        current_user_id = get_jwt_identity()
+        data = request.get_json()
 
-class PortfolioResource(Resource):
-    def get(self, portfolio_id):
-        portfolio = Portfolio.query.get(portfolio_id)
+        user = User.query.get(current_user_id)
+        template = Template.query.get(data.get("template_id"))
+
+        if not user or not template:
+            return {"error": "User or Template not found"}, 404
+
+        portfolio = Portfolio(
+            user_id=user.id,
+            template_id=template.id,
+            title=data.get("title", f"{user.username}'s Portfolio")
+        )
+        portfolio.generate_slug(user.username)
+
+        db.session.add(portfolio)
+        db.session.commit()
+
+        return {
+            "message": "Portfolio created successfully",
+            "slug": portfolio.slug,
+            "portfolio_url": f"/portfolios/{portfolio.slug}"
+        }, 201
+
+
+class PortfolioDetailResource(Resource):
+    def get(self, slug):
+        """Public route — view a full portfolio by slug."""
+        portfolio = Portfolio.query.filter_by(slug=slug).first()
         if not portfolio:
-            return {'error': 'Portfolio not found'}, 404
+            return {"error": "Portfolio not found"}, 404
+
         return serialize_portfolio(portfolio), 200
 
-    def delete(self, portfolio_id):
-        portfolio = Portfolio.query.get(portfolio_id)
+    @jwt_required()
+    def delete(self, slug):
+        """Delete a user's portfolio by slug."""
+        current_user_id = get_jwt_identity()
+        portfolio = Portfolio.query.filter_by(slug=slug, user_id=current_user_id).first()
+
         if not portfolio:
-            return {'error': 'Portfolio not found'}, 404
+            return {"error": "Portfolio not found or unauthorized"}, 404
+
         db.session.delete(portfolio)
         db.session.commit()
-        return {'message': 'Portfolio deleted'}, 200
+
+        return {"message": "Portfolio deleted successfully"}, 200
 
 api.add_resource(PortfolioListResource, '/portfolios')
-api.add_resource(PortfolioResource, '/portfolios/<int:portfolio_id>')
+api.add_resource(PortfolioDetailResource, '/portfolios/<string:slug>')

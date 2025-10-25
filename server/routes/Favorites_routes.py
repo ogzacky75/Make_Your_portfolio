@@ -1,11 +1,11 @@
 from flask import request
 from flask_restful import Resource, Api
 from models import db, Favorite, User, Template
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 api = Api()
 
 
-# --- SERIALIZER --- #
 def serialize_favorite(fav):
     return {
         "id": fav.id,
@@ -16,43 +16,48 @@ def serialize_favorite(fav):
     }
 
 
-# --- RESOURCES --- #
 class FavoriteListResource(Resource):
+    @jwt_required()
     def get(self):
-        favorites = Favorite.query.all()
-        return [serialize_favorite(f) for f in favorites], 200
+        current_user_id = get_jwt_identity()
+        favorites = Favorite.query.filter_by(user_id=current_user_id).all()
+        return [serialize_favorite(fav) for fav in favorites], 200
 
+    @jwt_required()
     def post(self):
-        data = request.get_json() or {}
-        user_id = data.get("user_id")
+        current_user_id = get_jwt_identity()
+        data = request.get_json()
         template_id = data.get("template_id")
 
-        if not user_id or not template_id:
-            return {"error": "user_id and template_id are required"}, 400
-
-        # Optional: check if user and template exist
-        if not User.query.get(user_id):
-            return {"error": "User not found"}, 404
-        if not Template.query.get(template_id):
+        template = Template.query.get(template_id)
+        if not template:
             return {"error": "Template not found"}, 404
 
-        fav = Favorite(user_id=user_id, template_id=template_id)
+        existing_fav = Favorite.query.filter_by(user_id=current_user_id, template_id=template_id).first()
+        if existing_fav:
+            return {"message": "Template already favorited"}, 200
+
+        fav = Favorite(user_id=current_user_id, template_id=template_id)
         db.session.add(fav)
         db.session.commit()
-        return serialize_favorite(fav), 201
+
+        return {"message": "Template added to favorites"}, 201
 
 
-class FavoriteResource(Resource):
-    def delete(self, favorite_id):
-        fav = Favorite.query.get(favorite_id)
-        if not fav:
+class FavoriteDetailResource(Resource):
+    @jwt_required()
+    def delete(self, template_id):
+        current_user_id = get_jwt_identity()
+        favorite = Favorite.query.filter_by(user_id=current_user_id, template_id=template_id).first()
+
+        if not favorite:
             return {"error": "Favorite not found"}, 404
 
-        db.session.delete(fav)
+        db.session.delete(favorite)
         db.session.commit()
-        return {"message": "Favorite deleted"}, 200
+        return {"message": "Template removed from favorites"}, 200
+    
 
 
-# --- REGISTER RESOURCES --- #
-api.add_resource(FavoriteListResource, "/favorites")
-api.add_resource(FavoriteResource, "/favorites/<int:favorite_id>")
+api.add_resource(FavoriteListResource, '/favorites')
+api.add_resource(FavoriteDetailResource, '/favorites/<int:template_id>')
