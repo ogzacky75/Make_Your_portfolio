@@ -1,5 +1,6 @@
 import Sidebar from "./components/Sidebar";
 import Navbar from "./componnts/Navbar"
+import Buttons from "./components/Buttons"
 
 function HomePage() {
   return (
