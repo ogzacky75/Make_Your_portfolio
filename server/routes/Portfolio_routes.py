@@ -6,7 +6,6 @@ from models import db, Portfolio, User, Template
 api = Api()
 
 
-# --- SERIALIZER --- #
 def serialize_portfolio(portfolio):
     return {
         "id": portfolio.id,
@@ -26,7 +25,6 @@ def serialize_portfolio(portfolio):
         "created_at": portfolio.created_at.isoformat() if portfolio.created_at else None,
         "updated_at": portfolio.updated_at.isoformat() if portfolio.updated_at else None,
 
-        # Related data
         "personal_info": {
             "name": portfolio.personal_info.name,
             "photo_url": portfolio.personal_info.photo_url,
