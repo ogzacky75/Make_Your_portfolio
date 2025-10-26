@@ -1,4 +1,6 @@
 import React from 'react'
+import HomeIcon from '@mui/icons-material/Home';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 export const  SideBarData  = [
    {
@@ -11,7 +13,15 @@ export const  SideBarData  = [
     title: "Template",
     icon: <TemplateIcon/>,
     link: "/template"
+   },
+   {
+    title: "Favorite",
+    icon: <FavoriteIcon/>,
+    link: "/favorite"
+
    }
+
+   
 
 ]
 
