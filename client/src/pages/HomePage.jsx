@@ -13,7 +13,16 @@ function HomePage(){
 
   }, []);
 
-  return
+  return(
+    <div className="home-container">
+      <header className="portfolio">
+        <h1>Welcome to the Make Your Portfolio Generator</h1>
+        <p>Create your own customized Portfolio with important credentials.</p>
+
+      </header>
+    </div>
+  )
 
 
 }
+
