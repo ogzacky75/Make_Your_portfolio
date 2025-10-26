@@ -1,14 +1,19 @@
-import Sidebar from "./components/Sidebar";
-import Navbar from "./componnts/Navbar"
-import Buttons from "./components/Buttons"
+import React , {useState, useEffect} from React;
+import Sidebar from "../components/Sidebar.jsx";
+import Navbar from "../components/Navbar.jsx";
+import {Link} from "react-router-dom";
 
-function HomePage() {
-  return (
-    <div>
-      <h1>Welcome to the Home Page</h1>
-      <p>This is the main landing page of our application.</p>
-    </div>
-  );
+function HomePage(){
+  const [templates, setTemplates] = useState([]);
+
+  useEffect(() => {
+    fetch("https: ")
+      .then((res) => res.json())
+      .then((data) => setTemplates(data))
+
+  }, []);
+
+  return
+
+
 }
-
-export default HomePage;

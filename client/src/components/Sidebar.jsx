@@ -1,6 +1,6 @@
 import React from 'react';
 
-const SimplePortfolioSidebar = () => {
+const Sidebar = () => {
   const menuItems = [
     { id: 'home', label: 'Home', icon: 'fas fa-home' },
     { id: 'templates', label: 'Templates', icon: 'fas fa-palette' },
@@ -64,4 +64,4 @@ const SimplePortfolioSidebar = () => {
   );
 };
 
-export default SimplePortfolioSidebar;
+export default Sidebar;
