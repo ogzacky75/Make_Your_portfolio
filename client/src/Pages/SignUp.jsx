@@ -15,9 +15,33 @@
     });
 
     function SignUp() {
-    const handleSubmit = (values, { resetForm }) => {
-        console.log("Form Submitted:", values);
+    const handleSubmit = async (values, { resetForm }) => {
+        try {
+        const response = await fetch("http://127.0.0.1:5000/users", {
+            method: "POST",
+            headers: {
+            "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+            name: values.name,
+            email: values.email,
+            password: values.password,
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to create user");
+        }
+
+        const data = await response.json();
+        console.log("User created:", data);
         resetForm();
+
+        alert("Signup successful! You can now login.");
+        } catch (error) {
+        console.error(error);
+        alert("Signup failed. Try again.");
+        }
     };
 
     return (
@@ -85,3 +109,4 @@
     }
 
     export default SignUp;
+
