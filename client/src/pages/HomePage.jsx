@@ -8,8 +8,7 @@ function HomePage() {
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    fetch("https://your-api-endpoint.com/templates")
-      .then((res) => res.json())
+    fetch("")
       .then((data) => setTemplates(data))
       .catch((error) => console.error('Error fetching templates:', error));
   }, []);
