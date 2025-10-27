@@ -4,7 +4,7 @@
     import { Link } from "react-router-dom";
 
     const SignUpSchema = Yup.object().shape({
-    name: Yup.string().required("Name is required"),
+    username: Yup.string().required("Username is required"),
     email: Yup.string().email("Invalid email").required("Email is required"),
     password: Yup.string()
         .min(6, "Password must be at least 6 characters")
@@ -23,7 +23,7 @@
             "Content-Type": "application/json",
             },
             body: JSON.stringify({
-            name: values.name,
+            username: values.username,
             email: values.email,
             password: values.password,
             }),
@@ -35,12 +35,12 @@
 
         const data = await response.json();
         console.log("User created:", data);
-        resetForm();
+        alert("Signup successful! You can now log in.");
 
-        alert("Signup successful! You can now login.");
+        resetForm();
         } catch (error) {
         console.error(error);
-        alert("Signup failed. Try again.");
+        alert("Signup failed");
         }
     };
 
@@ -64,7 +64,7 @@
 
             <Formik
                 initialValues={{
-                name: "",
+                username: "",
                 email: "",
                 password: "",
                 confirmPassword: "",
@@ -74,8 +74,8 @@
             >
                 {() => (
                 <Form className="signup-form">
-                    <Field type="text" name="name" placeholder="name" />
-                    <ErrorMessage name="name" component="div" className="error" />
+                    <Field type="text" name="username" placeholder="username" />
+                    <ErrorMessage name="username" component="div" className="error" />
 
                     <Field type="email" name="email" placeholder="email" />
                     <ErrorMessage name="email" component="div" className="error" />
@@ -109,4 +109,3 @@
     }
 
     export default SignUp;
-
