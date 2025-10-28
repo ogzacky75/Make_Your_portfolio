@@ -1,37 +1,49 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar.jsx";
 import Navbar from "../components/Navbar.jsx";
 import { Link } from "react-router-dom";
 
 function HomePage() {
   const [templates, setTemplates] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("")
-      .then((data) => setTemplates(data))
-      .catch((error) => console.error('Error fetching templates:', error));
+    fetch("http://localhost:5000/templates")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch templates");
+        return res.json();
+      })
+      .then((data) => {
+        setTemplates(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching templates:", error);
+        setLoading(false);
+      });
   }, []);
 
-  const filteredTemplates = templates.filter(template =>
+  const filteredTemplates = templates.filter((template) =>
     template.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <div className="flex min-h-screen bg-gray-100">
       <Sidebar />
-    
+
       <div className="flex-1 flex flex-col">
         <Navbar />
-        
+
         <div className="home-container p-8">
-          <header className="portfolio text-center mb-12">
+          <header className="text-center mb-12">
             <h1 className="text-4xl font-bold text-gray-800 mb-4">
               Welcome to the Portfolio Generator
             </h1>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Create your own customized portfolio with important credentials. 
-              Choose from our beautiful templates and showcase your work professionally.
+              Create your own customized portfolio with important credentials.
+              Choose from our beautiful templates and showcase your work
+              professionally.
             </p>
           </header>
 
@@ -41,7 +53,7 @@ function HomePage() {
                 Explore Our Templates
               </h2>
               <p className="text-gray-600">
-                Find the perfect template to showcase your skills and experience
+                Find the perfect template to showcase your skills and experience.
               </p>
             </div>
 
@@ -56,13 +68,26 @@ function HomePage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredTemplates.length > 0 ? (
+              {loading ? (
+                <div className="col-span-full text-center py-12">
+                  <i className="fas fa-spinner fa-spin text-4xl text-gray-400 mb-4"></i>
+                  <h3 className="text-xl font-semibold text-gray-600 mb-2">
+                    Loading templates...
+                  </h3>
+                  <p className="text-gray-500">
+                    Please wait while we load our templates
+                  </p>
+                </div>
+              ) : filteredTemplates.length > 0 ? (
                 filteredTemplates.map((template) => (
-                  <div key={template.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                  <div
+                    key={template.id}
+                    className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                  >
                     <div className="h-48 bg-gray-200 flex items-center justify-center">
                       {template.image ? (
-                        <img 
-                          src={template.image} 
+                        <img
+                          src={template.image}
                           alt={template.name}
                           className="w-full h-full object-cover"
                         />
@@ -78,7 +103,7 @@ function HomePage() {
                         {template.name}
                       </h3>
                       <p className="text-gray-600 mb-4">
-                        {template.description || 'Professional portfolio template'}
+                        {template.description || "Professional portfolio template"}
                       </p>
                       <Link
                         to={`/template/${template.id}`}
@@ -93,10 +118,10 @@ function HomePage() {
                 <div className="col-span-full text-center py-12">
                   <i className="fas fa-search text-4xl text-gray-400 mb-4"></i>
                   <h3 className="text-xl font-semibold text-gray-600 mb-2">
-                    {searchTerm ? 'No templates found' : 'Loading templates...'}
+                    No templates found
                   </h3>
                   <p className="text-gray-500">
-                    {searchTerm ? 'Try adjusting your search terms' : 'Please wait while we load our templates'}
+                    Try adjusting your search terms or check back later.
                   </p>
                 </div>
               )}
