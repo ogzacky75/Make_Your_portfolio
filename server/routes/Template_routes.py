@@ -1,5 +1,6 @@
 from flask import request
 from flask_restful import Resource, Api
+from flask_jwt_extended import jwt_required
 from models import db, Template
 
 api = Api()
@@ -13,12 +14,13 @@ def serialize_template(template):
         "preview_url": template.preview_url
     }
 
-
 class TemplateListResource(Resource):
+    @jwt_required()
     def get(self):
         templates = Template.query.all()
         return [serialize_template(t) for t in templates], 200
 
+    @jwt_required()
     def post(self):
         data = request.get_json()
         name = data.get("name")
@@ -43,6 +45,7 @@ class TemplateListResource(Resource):
 
 
 class TemplateDetailResource(Resource):
+    @jwt_required()
     def get(self, id):
         template = Template.query.get(id)
         if not template:
