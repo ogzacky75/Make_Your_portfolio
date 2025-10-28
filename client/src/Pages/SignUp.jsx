@@ -19,7 +19,7 @@
     const [backendErrors, setBackendErrors] = useState({});
 
     const handleSubmit = async (values, { resetForm }) => {
-        setBackendErrors({}); // Clear previous errors
+        setBackendErrors({});
         try {
         const response = await fetch("http://127.0.0.1:5000/users", {
             method: "POST",
@@ -34,7 +34,6 @@
         const data = await response.json();
 
         if (!response.ok) {
-            // If backend returns field-specific errors, set them
             setBackendErrors(data || { general: "Signup failed" });
             return;
         }
