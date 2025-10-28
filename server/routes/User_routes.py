@@ -1,7 +1,8 @@
 from flask import request
 from flask_restful import Resource, Api
 from models import db, User
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_jwt_extended import create_access_token
 
 api = Api()
 
@@ -107,7 +108,25 @@ class UserResource(Resource):
 
         db.session.commit()
         return serialize_user(user), 200
+    
+class LoginResource(Resource):
+    def post(self):
+        data = request.get_json() or {}
+        email = data.get("email")
+        password = data.get("password")
+
+        if not email or not password:
+            return {"error": "Email and password are required"}, 400
+
+        user = User.query.filter_by(email=email).first()
+        if not user or not check_password_hash(user.password, password):
+            return {"error": "Invalid email or password"}, 401
+
+        token = create_access_token(identity=user.id)
+        return {"access_token": token, "user": serialize_user(user)}, 200
+
 
 
 api.add_resource(UserListResource, "/users")
 api.add_resource(UserResource, "/users/<int:user_id>")
+api.add_resource(LoginResource, "/login")
