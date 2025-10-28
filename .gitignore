@@ -1,4 +1,5 @@
-.venv
+.venv/
+venv/
 node_modules
 /instance
 __pycache__
