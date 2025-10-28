@@ -7,10 +7,23 @@ function HomePage() {
   const [templates, setTemplates] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:5000/templates")
+    const token = localStorage.getItem("token"); 
+    if (!token) {
+      setError("Unauthorized — please log in first.");
+      setLoading(false);
+      return;
+    }
+
+    fetch("http://localhost:5000/templates", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((res) => {
+        if (res.status === 401) throw new Error("Unauthorized");
         if (!res.ok) throw new Error("Failed to fetch templates");
         return res.json();
       })
@@ -20,6 +33,7 @@ function HomePage() {
       })
       .catch((error) => {
         console.error("Error fetching templates:", error);
+        setError(error.message);
         setLoading(false);
       });
   }, []);
@@ -67,6 +81,12 @@ function HomePage() {
               />
             </div>
 
+            {error && (
+              <div className="text-center text-red-500 font-medium mb-4">
+                {error}
+              </div>
+            )}
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {loading ? (
                 <div className="col-span-full text-center py-12">
@@ -98,6 +118,7 @@ function HomePage() {
                         </div>
                       )}
                     </div>
+
                     <div className="p-4">
                       <h3 className="text-xl font-semibold text-gray-800 mb-2">
                         {template.name}
