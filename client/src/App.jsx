@@ -12,6 +12,9 @@ import SignUp from "./pages/SignUp.jsx";
 import LogIn from "./pages/LogIn.jsx";
 import Navbar from "./components/Navbar.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import PortfolioPage from "./pages/PortfolioPage.jsx";
+import PortfolioListPage from "./pages/PortfolioListPage.jsx";
+
 
 function AppWrapper() {
   const location = useLocation();
@@ -67,6 +70,14 @@ function AppWrapper() {
           }
         />
         <Route
+          path="/portfolios"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <PortfolioListPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/create-portfolio"
           element={
             <ProtectedRoute isAuthenticated={isAuthenticated}>
@@ -74,6 +85,7 @@ function AppWrapper() {
             </ProtectedRoute>
           }
         />
+        <Route path="/portfolio/:slug" element={<PortfolioPage />} />
       </Routes>
     </>
   );

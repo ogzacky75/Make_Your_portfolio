@@ -6,7 +6,6 @@ export default function TemplateCard({ template, onFavorite }) {
   const navigate = useNavigate();
 
   const handleUseTemplate = () => {
-    // Navigate to create-portfolio page and pass template as state
     navigate("/create-portfolio", { state: { template } });
   };
 

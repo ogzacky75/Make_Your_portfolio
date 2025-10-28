@@ -8,6 +8,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     { id: "home", label: "Home", icon: "fas fa-home", path: "/home" },
     { id: "templates", label: "Templates", icon: "fas fa-palette", path: "/templates" },
     { id: "favorites", label: "Favorites", icon: "fas fa-star", path: "/favorites" },
+    { id: "portfolios", label: "My Portfolios", icon: "fas fa-briefcase", path: "/portfolios" },
   ];
 
   const handleButtonClick = (path) => {
@@ -20,21 +21,6 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       className={`fixed top-0 left-0 h-screen bg-white shadow-lg flex flex-col transform transition-transform duration-300 ease-in-out z-50
         ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 w-64`}
     >
-      <div className="p-6 border-b border-gray-200 flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <div className="bg-indigo-600 w-10 h-10 rounded-lg flex items-center justify-center">
-            <i className="fas fa-briefcase text-white text-lg"></i>
-          </div>
-          <h1 className="text-xl font-bold text-gray-800">PortfolioGen</h1>
-        </div>
-        <button
-          onClick={() => toggleSidebar(false)}
-          className="md:hidden text-gray-600 hover:text-indigo-600"
-        >
-          <i className="fas fa-times text-xl"></i>
-        </button>
-      </div>
-
       <div className="flex-1 py-6 overflow-y-auto">
         <ul className="space-y-2 px-4">
           {menuItems.map((item) => (

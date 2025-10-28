@@ -83,7 +83,7 @@ class PortfolioListResource(Resource):
 
     @jwt_required()
     def post(self):
-        """Create a new portfolio for the authenticated user."""
+        """Create a new portfolio with all details for the authenticated user."""
         current_user_id = get_jwt_identity()
         data = request.get_json()
 
@@ -99,8 +99,74 @@ class PortfolioListResource(Resource):
             title=data.get("title", f"{user.username}'s Portfolio")
         )
         portfolio.generate_slug(user.username)
-
         db.session.add(portfolio)
+        db.session.commit()  # commit first to get portfolio.id
+
+        portfolio_id = portfolio.id
+
+        personal = data.get("personal_info")
+        if personal:
+            from models import PersonalInfo
+            pi = PersonalInfo(
+                portfolio_id=portfolio_id,
+                name=personal.get("name"),
+                photo_url=personal.get("photo_url"),
+                contact_email=personal.get("contact_email"),
+                phone=personal.get("phone"),
+                linkedin=personal.get("linkedin"),
+                github=personal.get("github"),
+                website=personal.get("website")
+            )
+            db.session.add(pi)
+
+        from models import Education, Experience, Project, Skill
+
+        for edu in data.get("education", []):
+            if not isinstance(edu, dict):  # skip invalid entries
+                continue
+            e = Education(
+                portfolio_id=portfolio_id,
+                institution=edu.get("institution"),
+                degree=edu.get("degree"),
+                start_year=edu.get("start_year"),
+                end_year=edu.get("end_year")
+            )
+            db.session.add(e)
+
+        for exp in data.get("experience", []):
+            if not isinstance(exp, dict):
+                continue
+            ex = Experience(
+                portfolio_id=portfolio_id,
+                job_title=exp.get("job_title"),
+                company=exp.get("company"),
+                start_date=exp.get("start_date"),
+                end_date=exp.get("end_date"),
+                description=exp.get("description")
+            )
+            db.session.add(ex)
+
+        for proj in data.get("projects", []):
+            if not isinstance(proj, dict):
+                continue
+            p = Project(
+                portfolio_id=portfolio_id,
+                project_name=proj.get("project_name"),
+                description=proj.get("description"),
+                image_url=proj.get("image_url"),
+                project_link=proj.get("project_link")
+            )
+            db.session.add(p)
+
+        for skill in data.get("skills", []):
+            skill_name = skill if isinstance(skill, str) else skill.get("skill_name")
+            if skill_name:  # skip empty
+                s = Skill(
+                    portfolio_id=portfolio_id,
+                    skill_name=skill_name
+                )
+                db.session.add(s)
+
         db.session.commit()
 
         return {
@@ -108,6 +174,8 @@ class PortfolioListResource(Resource):
             "slug": portfolio.slug,
             "portfolio_url": f"/portfolios/{portfolio.slug}"
         }, 201
+
+
 
 
 class PortfolioDetailResource(Resource):
