@@ -4,12 +4,14 @@ import LandingPage from "./pages/LandingPage.jsx";
 import Templates from "./pages/Templates.jsx";
 import Favorites from "./pages/Favorites.jsx";
 import CreatePortfolio from "./pages/CreatePortfolio.jsx"; 
+import HomePage from './pages/HomePage.jsx';
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/home" element={<HomePage />} />
         <Route path="/templates" element={<Templates />} />
         <Route path="/favorites" element={<Favorites />} />
         <Route path="/create-portfolio" element={<CreatePortfolio />} />
