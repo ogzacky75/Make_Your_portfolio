@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const Sidebar = () => {
+const Sidebar = ({ user = { name: 'Jasmine Keith', email: 'jasmineK@gmail.com' } }) => {
   const navigate = useNavigate();
 
   const menuItems = [
@@ -12,7 +12,7 @@ const Sidebar = () => {
 
   const handleButtonClick = (path) => {
     console.log(`Navigating to: ${path}`);
-
+    navigate(path);
   };
 
   return (
@@ -49,8 +49,8 @@ const Sidebar = () => {
               <i className="fas fa-user text-gray-600"></i>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-900">Jasmine Keith</p>
-              <p className="text-xs text-gray-500">jasmineK@gmail.com</p>
+              <p className="text-sm font-medium text-gray-900">{user.name}</p>
+              <p className="text-xs text-gray-500">{user.email}</p>
             </div>
           </div>
         </div>
