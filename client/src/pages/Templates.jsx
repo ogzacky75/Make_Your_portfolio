@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import TemplateCard from "../components/TemplateCard";
 import { AuthContext } from "../context/AuthContext";
+import Sidebar from "../components/Sidebar.jsx";
 
 export default function Templates() {
   const { token } = useContext(AuthContext);
@@ -52,6 +53,7 @@ export default function Templates() {
 
   return (
     <div className="p-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <Sidebar/>
       {templates.map((template) => (
         <TemplateCard key={template.id} template={template} onFavorite={() => handleFavorite(template.id)} />
       ))}
