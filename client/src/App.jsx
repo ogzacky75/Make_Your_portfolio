@@ -3,7 +3,7 @@ import './App.css';
 import LandingPage from "./pages/LandingPage.jsx";
 import Templates from "./pages/Templates.jsx";
 import Favorites from "./pages/Favorites.jsx";
-import CreatePortfolio from "./pages/CreatePortfolio.jsx"; // ✅ Added
+import CreatePortfolio from "./pages/CreatePortfolio.jsx"; 
 
 function App() {
   return (
