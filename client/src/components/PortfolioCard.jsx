@@ -1,5 +1,5 @@
 import { Share2, Trash2, Eye } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Button";
 
 export default function PortfolioCard({ portfolio, onView, onDelete, onShare }) {
   return (

@@ -1,25 +1,93 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import './App.css';
+import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import "./App.css";
+
 import LandingPage from "./pages/LandingPage.jsx";
 import Templates from "./pages/Templates.jsx";
 import Favorites from "./pages/Favorites.jsx";
-import CreatePortfolio from "./pages/CreatePortfolio.jsx"; 
-import HomePage from './pages/HomePage.jsx';
+import CreatePortfolio from "./pages/CreatePortfolio.jsx";
+import HomePage from "./pages/HomePage.jsx";
+import SignUp from "./pages/SignUp.jsx";
+import LogIn from "./pages/LogIn.jsx";
+import Navbar from "./components/Navbar.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
-function App() {
+function AppWrapper() {
+  const location = useLocation();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const hideNavbar = ["/", "/login", "/signup"].includes(location.pathname);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      fetch("http://127.0.0.1:5000/me", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((res) => {
+          if (res.ok) setIsAuthenticated(true);
+          else {
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            setIsAuthenticated(false);
+          }
+        })
+        .catch(() => {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          setIsAuthenticated(false);
+        });
+    }
+  }, []);
+
   return (
-    <Router>
+    <>
+      {!hideNavbar && <Navbar setIsAuthenticated={setIsAuthenticated} />}
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/login" element={<LogIn />} />
-        <Route path="/home" element={<HomePage />} />
-        <Route path="/templates" element={<Templates />} />
-        <Route path="/favorites" element={<Favorites />} />
-        <Route path="/create-portfolio" element={<CreatePortfolio />} />
+        <Route path="/signup" element={<SignUp setIsAuthenticated={setIsAuthenticated} />} />
+        <Route path="/login" element={<LogIn setIsAuthenticated={setIsAuthenticated} />} />
+
+        <Route
+          path="/home"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <HomePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/templates"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <Templates />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/favorites"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <Favorites />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/create-portfolio"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <CreatePortfolio />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
-    </Router>
+    </>
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <Router>
+      <AppWrapper />
+    </Router>
+  );
+}

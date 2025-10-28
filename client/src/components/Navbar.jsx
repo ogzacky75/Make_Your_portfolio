@@ -1,56 +1,59 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
 
-const Navbar = () => {
-  
-  return(
+const Navbar = ({ setIsAuthenticated }) => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setIsAuthenticated(false);
+    navigate("/login");
+  };
+
+  return (
     <nav className="bg-gray-800 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-        
-          <Link 
-            to="/" 
-            className="flex-shrink-0 text-white text-xl font-bold hover:text-gray-300 transition duration-300"
+          <Link
+            to="/home"
+            className="text-white text-xl font-bold hover:text-gray-300 transition duration-300"
           >
             Make Your Portfolio
           </Link>
 
-          <ul className="flex space-x-4 md:space-x-8">
+          <ul className="flex space-x-4">
             <li>
-              <Link 
-                to="/"
-                className={`px-3 py-2 rounded-md text-sm font-medium transition duration-300 ${
-                  isActive('/') 
-                    ? 'bg-gray-900 text-white' 
-                    : 'text-gray-300 hover:bg-gray-700 hover:text-white'
-                }`}
+              <Link
+                to="/home"
+                className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm"
               >
                 Home
               </Link>
             </li>
             <li>
-              <Link 
-                to="/explore"
-                className={`px-3 py-2 rounded-md text-sm font-medium transition duration-300 ${
-                  isActive('/explore') 
-                    ? 'bg-gray-900 text-white' 
-                    : 'text-gray-300 hover:bg-gray-700 hover:text-white'
-                }`}
+              <Link
+                to="/templates"
+                className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm"
               >
                 Templates
               </Link>
             </li>
             <li>
-              <Link 
-                to="/find"
-                className={`px-3 py-2 rounded-md text-sm font-medium transition duration-300 ${
-                  isActive('/find') 
-                    ? 'bg-gray-900 text-white' 
-                    : 'text-gray-300 hover:bg-gray-700 hover:text-white'
-                }`}
+              <Link
+                to="/favorites"
+                className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm"
               >
-                Search
+                Favorites
               </Link>
+            </li>
+            <li>
+              <button
+                onClick={handleLogout}
+                className="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-md text-sm"
+              >
+                Logout
+              </button>
             </li>
           </ul>
         </div>

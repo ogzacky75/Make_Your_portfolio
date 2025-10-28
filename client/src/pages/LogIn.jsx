@@ -1,71 +1,94 @@
-    import React from "react";
-    import { Formik, Form, Field, ErrorMessage } from "formik";
-    import * as Yup from "yup";
-    import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import { Link, useNavigate } from "react-router-dom";
 
-    const LoginSchema = Yup.object().shape({
-    name: Yup.string().required("Name is required"),
-    email: Yup.string().email("Invalid email").required("Email is required"),
-    password: Yup.string().required("Password is required"),
-    });
+const LoginSchema = Yup.object().shape({
+  email: Yup.string().email("Invalid email").required("Email is required"),
+  password: Yup.string().required("Password is required"),
+});
 
-    function LogIn() {
-    const handleSubmit = (values, { resetForm }) => {
-        console.log("Login form submitted:", values);
-        resetForm();
-    };
+function LogIn({ setIsAuthenticated }) {
+  const navigate = useNavigate();
 
-    return (
-        <main>
-            <section className="login-section">
-            <div className="login-content">
-                <div className="login-text">
-                <h1>LOGIN</h1>
-                </div>
+  useEffect(() => {
+    if (localStorage.getItem("token")) navigate("/home");
+  }, [navigate]);
 
-                <div className="login-form-container">
-                <Formik
-                    initialValues={{ name: "", email: "", password: "" }}
-                    validationSchema={LoginSchema}
-                    onSubmit={handleSubmit}
-                >
-                    {() => (
-                    <Form className="login-form">
-                        <Field 
-                        type="text"
-                        name="name"
-                        placeholder="name"
-                        />
-                        <ErrorMessage name="name" component="div" className="error" />  
+  const handleSubmit = async (values, { resetForm }) => {
+    try {
+      const response = await fetch("http://127.0.0.1:5000/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
 
-                        <Field
-                        type="email"
-                        name="email"
-                        placeholder="email"
-                        />
-                        <ErrorMessage name="email" component="div" className="error" />
+      const data = await response.json();
 
-                        <Field
-                        type="password"
-                        name="password"
-                        placeholder="password"
-                        />
-                        <ErrorMessage name="password" component="div" className="error" />
+      if (!response.ok) {
+        alert(data.error || "Invalid credentials");
+        return;
+      }
 
-                        <button type="submit">login</button>
-                    </Form>
-                    )}
-                </Formik>
-                <p>
-                    Don’t have an account? <Link to="/signup">sign up</Link>
-                </p>
-                </div>
-            </div>
-            </section>
-        </main>
-    );
+      localStorage.setItem("token", data.access_token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      setIsAuthenticated(true);
+
+      resetForm();
+      navigate("/home");
+    } catch (err) {
+      console.error(err);
+      alert("Server error, please try again later.");
     }
+  };
 
-    export default LogIn;
+  return (
+    <main className="flex items-center justify-center min-h-screen bg-gray-100">
+      <section className="bg-white shadow-lg rounded-lg p-8 w-96">
+        <h1 className="text-2xl font-bold mb-4 text-center">Login</h1>
+        <Formik
+          initialValues={{ email: "", password: "" }}
+          validationSchema={LoginSchema}
+          onSubmit={handleSubmit}
+        >
+          <Form className="flex flex-col space-y-4">
+            <div>
+              <Field
+                type="email"
+                name="email"
+                placeholder="Email"
+                className="w-full border p-2 rounded"
+              />
+              <ErrorMessage name="email" component="div" className="text-red-500 text-sm" />
+            </div>
 
+            <div>
+              <Field
+                type="password"
+                name="password"
+                placeholder="Password"
+                className="w-full border p-2 rounded"
+              />
+              <ErrorMessage name="password" component="div" className="text-red-500 text-sm" />
+            </div>
 
+            <button
+              type="submit"
+              className="bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md"
+            >
+              Login
+            </button>
+          </Form>
+        </Formik>
+        <p className="text-center text-sm mt-4">
+          Don’t have an account?{" "}
+          <Link to="/signup" className="text-blue-500 hover:underline">
+            Sign up
+          </Link>
+        </p>
+      </section>
+    </main>
+  );
+}
+
+export default LogIn;
