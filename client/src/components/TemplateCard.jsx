@@ -1,7 +1,15 @@
 import { Heart, Eye } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { useNavigate } from "react-router-dom";
 
-export default function TemplateCard({ template, onSelect, onFavorite }) {
+export default function TemplateCard({ template, onFavorite }) {
+  const navigate = useNavigate();
+
+  const handleUseTemplate = () => {
+    // Navigate to create-portfolio page and pass template as state
+    navigate("/create-portfolio", { state: { template } });
+  };
+
   return (
     <div className="bg-white rounded-2xl shadow hover:shadow-lg transition p-4 flex flex-col">
       <img
@@ -11,9 +19,7 @@ export default function TemplateCard({ template, onSelect, onFavorite }) {
       />
 
       <div className="flex-1">
-        <h2 className="text-lg font-semibold text-gray-800 mb-1">
-          {template.name}
-        </h2>
+        <h2 className="text-lg font-semibold text-gray-800 mb-1">{template.name}</h2>
         <p className="text-gray-600 text-sm mb-3 line-clamp-2">
           {template.description}
         </p>
@@ -21,7 +27,7 @@ export default function TemplateCard({ template, onSelect, onFavorite }) {
 
       <div className="flex justify-between items-center">
         <Button
-          onClick={() => onSelect(template)}
+          onClick={handleUseTemplate}
           className="bg-blue-600 hover:bg-blue-700 text-white"
         >
           Use Template

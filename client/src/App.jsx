@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import "./App.css";
+
+import { AuthProvider } from "./context/AuthContext";
 
 import LandingPage from "./pages/LandingPage.jsx";
 import Templates from "./pages/Templates.jsx";
@@ -27,15 +28,10 @@ function AppWrapper() {
           if (res.ok) setIsAuthenticated(true);
           else {
             localStorage.removeItem("token");
-            localStorage.removeItem("user");
             setIsAuthenticated(false);
           }
         })
-        .catch(() => {
-          localStorage.removeItem("token");
-          localStorage.removeItem("user");
-          setIsAuthenticated(false);
-        });
+        .catch(() => setIsAuthenticated(false));
     }
   }, []);
 
@@ -46,7 +42,6 @@ function AppWrapper() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/signup" element={<SignUp setIsAuthenticated={setIsAuthenticated} />} />
         <Route path="/login" element={<LogIn setIsAuthenticated={setIsAuthenticated} />} />
-
         <Route
           path="/home"
           element={
@@ -86,8 +81,10 @@ function AppWrapper() {
 
 export default function App() {
   return (
-    <Router>
-      <AppWrapper />
-    </Router>
+    <AuthProvider>
+      <Router>
+        <AppWrapper />
+      </Router>
+    </AuthProvider>
   );
 }

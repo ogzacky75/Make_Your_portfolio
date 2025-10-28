@@ -1,5 +1,4 @@
 import { useState, useEffect, useContext } from "react";
-import { apiRequest } from "../api/api";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
@@ -24,35 +23,55 @@ export default function CreatePortfolio() {
   });
 
   const [skills, setSkills] = useState([""]);
-  const [projects, setProjects] = useState([{ name: "", description: "", link: "" }]);
   const [education, setEducation] = useState([{ institution: "", degree: "", start_year: "", end_year: "" }]);
   const [experience, setExperience] = useState([{ job_title: "", company: "", start_date: "", end_date: "", description: "" }]);
+  const [projects, setProjects] = useState([{ name: "", description: "", link: "" }]);
 
   useEffect(() => {
-    apiRequest("/templates")
+    if (!token) return;
+    fetch("http://localhost:5000/templates", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => res.json())
       .then(setTemplates)
       .catch(console.error);
-  }, []);
+  }, [token]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!selectedTemplate) {
+      alert("Please select a template!");
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const data = {
+      const payload = {
         title,
         template_id: selectedTemplate,
         personal_info: personalInfo,
         skills,
-        projects,
         education,
         experience,
+        projects,
       };
 
-      const res = await apiRequest("/portfolios", "POST", data, token);
-      setPortfolioURL(`http://localhost:5173/portfolio/${res.slug}`);
+      const res = await fetch("http://localhost:5000/portfolios", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) throw new Error("Failed to create portfolio");
+
+      const data = await res.json();
+      setPortfolioURL(`http://localhost:5173/portfolio/${data.slug}`);
       alert("Portfolio created successfully!");
-      navigate(`/portfolio/${res.slug}`);
+      navigate(`/portfolio/${data.slug}`);
     } catch (err) {
       alert(err.message);
     } finally {
@@ -69,8 +88,8 @@ export default function CreatePortfolio() {
           <label className="block font-semibold mb-1">Portfolio Title</label>
           <input
             type="text"
-            className="border w-full p-2 rounded"
             placeholder="e.g. Zacky Og Portfolio"
+            className="border w-full p-2 rounded"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
@@ -129,11 +148,7 @@ export default function CreatePortfolio() {
             </button>
           </div>
         ))}
-        <button
-          type="button"
-          className="bg-blue-500 text-white px-3 py-1 rounded"
-          onClick={() => setSkills([...skills, ""])}
-        >
+        <button type="button" className="bg-blue-500 text-white px-3 py-1 rounded" onClick={() => setSkills([...skills, ""])}>
           + Add Skill
         </button>
 
@@ -164,11 +179,7 @@ export default function CreatePortfolio() {
             />
           </div>
         ))}
-        <button
-          type="button"
-          className="bg-blue-500 text-white px-3 py-1 rounded"
-          onClick={() => setEducation([...education, { institution: "", degree: "" }])}
-        >
+        <button type="button" className="bg-blue-500 text-white px-3 py-1 rounded" onClick={() => setEducation([...education, { institution: "", degree: "" }])}>
           + Add Education
         </button>
 

@@ -19,33 +19,11 @@ const Navbar = ({ setIsAuthenticated }) => {
             to="/home"
             className="text-white text-xl font-bold hover:text-gray-300 transition duration-300"
           >
-            Make Your Portfolio
+            MYP
           </Link>
 
           <ul className="flex space-x-4">
             <li>
-              <Link
-                to="/home"
-                className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm"
-              >
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/templates"
-                className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm"
-              >
-                Templates
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/favorites"
-                className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm"
-              >
-                Favorites
-              </Link>
             </li>
             <li>
               <button
