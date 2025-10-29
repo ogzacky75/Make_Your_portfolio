@@ -1,5 +1,11 @@
-.venv
-node_modules
-/instance
-__pycache__venv/
 __pycache__/
+*.pyc
+.venv/
+venv/
+env/
+node_modules/
+client/.vite/
+client/dist/
+.env
+*.db
+instance/
