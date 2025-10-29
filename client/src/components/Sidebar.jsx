@@ -1,8 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Sidebar = ({ isOpen, toggleSidebar }) => {
+const Sidebar = ({ isOpen = false, toggleSidebar = () => {} }) => {
   const navigate = useNavigate();
+  const [user, setUser] = useState(null); 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setLoading(false);
+      return;
+    }
+
+    fetch("http://127.0.0.1:5000/me", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch user");
+        return res.json();
+      })
+      .then((data) => setUser(data))
+      .catch((err) => console.error(err))
+      .finally(() => setLoading(false));
+  }, []);
 
   const menuItems = [
     { id: "home", label: "Home", icon: "fas fa-home", path: "/home" },
@@ -38,15 +59,21 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       </div>
 
       <div className="p-4 border-t border-gray-200">
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
-            <i className="fas fa-user text-gray-600"></i>
+        {loading ? (
+          <p className="text-sm text-gray-500">Loading user...</p>
+        ) : user ? (
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
+              <i className="fas fa-user text-gray-600"></i>
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-gray-900">{user.name}</p>
+              <p className="text-xs text-gray-500">{user.email}</p>
+            </div>
           </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-900">Jasmine Keith</p>
-            <p className="text-xs text-gray-500">jasmineK@gmail.com</p>
-          </div>
-        </div>
+        ) : (
+          <p className="text-sm text-red-500">No user data</p>
+        )}
       </div>
     </div>
   );
