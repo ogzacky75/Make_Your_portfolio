@@ -2,13 +2,13 @@ import { Link } from "react-router-dom";
 
 function LandingPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-white text-gray-900">
+    <div className="min-h-screen flex flex-col bg-gray-300 text-gray-900">
       
       <nav className="flex items-center justify-between px-8 py-4 shadow-sm bg-white/70 backdrop-blur-md">
         <h1 className="text-2xl font-bold text-indigo-600">MYP</h1>
         <div className="space-x-4">
           <Link to="/login">
-            <button className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-indigo-600 transition">
+            <button className="px-4 py-2 text-sm font-medium bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
               Login
             </button>
           </Link>
