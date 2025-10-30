@@ -41,7 +41,7 @@ export default function HomePage() {
   );
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-[#1c0031]">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={setSidebarOpen} />
 
       <div className={`flex-1 transition-all duration-300 ${sidebarOpen ? "md:ml-64" : "ml-0 md:ml-64"}`}>
