@@ -48,8 +48,8 @@ function SignUp({ setIsAuthenticated }) {
   };
 
   return (
-    <main className="flex items-center justify-center min-h-screen bg-gray-100">
-      <section className="bg-white shadow-lg rounded-lg p-8 w-96">
+    <main className="flex items-center justify-center min-h-screen bg-green-500">
+      <section className="bg-gray-300 shadow-lg rounded-lg p-8 w-96">
         <h1 className="text-2xl font-bold mb-4 text-center">Sign Up</h1>
         <Formik
           initialValues={{
@@ -90,7 +90,7 @@ function SignUp({ setIsAuthenticated }) {
 
         <p className="text-center text-sm mt-4">
           Already have an account?{" "}
-          <Link to="/login" className="text-blue-500 hover:underline">
+          <Link to="/login" className="text-blue-900 font-bold hover:underline">
             Login
           </Link>
         </p>
