@@ -9,3 +9,5 @@ client/dist/
 .env
 *.db
 instance/
+client/
+/client
