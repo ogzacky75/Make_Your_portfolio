@@ -1,0 +1,17 @@
+.bg-gradient-animate {
+  background: linear-gradient(-45deg, #0b001a, #190033, #2d0059, #3b0073);
+  background-size: 400% 400%;
+  animation: gradientMove 12s ease infinite;
+}
+
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}

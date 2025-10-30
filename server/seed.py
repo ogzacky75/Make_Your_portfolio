@@ -9,6 +9,14 @@ from models import (
 
 app = create_app()
 
+# ------------------ Helper Functions ------------------ #
+
+def generate_slug(title):
+    """Generate a URL-friendly slug from a title."""
+    return title.lower().replace(" ", "-")
+
+# ------------------ Seed Functions ------------------ #
+
 def seed_users():
     users = [
         User(username='Jane James', email='janeJames@gmail.com', password=generate_password_hash('janepassword23')),
@@ -19,7 +27,6 @@ def seed_users():
     db.session.add_all(users)
     db.session.commit()
     print("Users seeded successfully.")
-
 
 def seed_templates():
     templates = [
@@ -48,7 +55,6 @@ def seed_templates():
     db.session.commit()
     print("Templates seeded successfully.")
 
-
 def seed_favorites():
     favorites = [
         Favorite(user_id=1, template_id=1),
@@ -60,18 +66,28 @@ def seed_favorites():
     db.session.commit()
     print("Favorites seeded successfully.")
 
-
 def seed_portfolios():
-    portfolios = [
-        Portfolio(user_id=1, template_id=1, title="Jane James - Full Stack Developer"),
-        Portfolio(user_id=2, template_id=2, title="Nora Smith - UX Designer"),
-        Portfolio(user_id=3, template_id=3, title="Jade Keith - Software Engineer"),
-        Portfolio(user_id=4, template_id=4, title="Liam Brown - Data Analyst"),
+    portfolio_data = [
+        {"user_id": 1, "template_id": 1, "title": "Jane James - Full Stack Developer"},
+        {"user_id": 2, "template_id": 2, "title": "Nora Smith - UX Designer"},
+        {"user_id": 3, "template_id": 3, "title": "Jade Keith - Software Engineer"},
+        {"user_id": 4, "template_id": 4, "title": "Liam Brown - Data Analyst"},
     ]
+
+    portfolios = []
+    for data in portfolio_data:
+        portfolios.append(
+            Portfolio(
+                user_id=data["user_id"],
+                template_id=data["template_id"],
+                title=data["title"],
+                slug=generate_slug(data["title"])
+            )
+        )
+
     db.session.add_all(portfolios)
     db.session.commit()
     print("Portfolios seeded successfully.")
-
 
 def seed_personal_info():
     personal_info_list = [
@@ -120,7 +136,6 @@ def seed_personal_info():
     db.session.commit()
     print("Personal Info seeded successfully.")
 
-
 def seed_education():
     education_list = [
         Education(portfolio_id=1, institution='University of Nairobi', degree='BSc Computer Science', start_year='2018', end_year='2022'),
@@ -131,7 +146,6 @@ def seed_education():
     db.session.add_all(education_list)
     db.session.commit()
     print("Education seeded successfully.")
-
 
 def seed_experience():
     experience_list = [
@@ -144,7 +158,6 @@ def seed_experience():
     db.session.commit()
     print("Experience seeded successfully.")
 
-
 def seed_projects():
     projects = [
         Project(portfolio_id=1, project_name='Portfolio Website', description='A modern portfolio built with React and Flask.', image_url='https://example.com/images/portfolio.png', project_link='https://github.com/janejames/portfolio'),
@@ -155,7 +168,6 @@ def seed_projects():
     db.session.add_all(projects)
     db.session.commit()
     print("Projects seeded successfully.")
-
 
 def seed_skills():
     skills = [
@@ -172,7 +184,7 @@ def seed_skills():
     db.session.commit()
     print("Skills seeded successfully.")
 
-
+# ------------------ Main Script ------------------ #
 
 if __name__ == "__main__":
     with app.app_context():
@@ -192,4 +204,4 @@ if __name__ == "__main__":
         seed_projects()
         seed_skills()
 
-        print("\n All data seeded successfully!")
+        print("\nAll data seeded successfully!")
