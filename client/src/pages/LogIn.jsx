@@ -44,7 +44,7 @@ function LogIn({ setIsAuthenticated }) {
 
   return (
     <main className="flex items-center justify-center min-h-screen bg-gray-100">
-      <section className="bg-white shadow-lg rounded-lg p-8 w-96">
+      <section className="bg-pink-400 p-8 w-96 rounded-2xl shadow-lg pt-10 pb-20">
         <h1 className="text-2xl font-bold mb-4 text-center">Login</h1>
         <Formik
           initialValues={{ email: "", password: "" }}
@@ -59,7 +59,7 @@ function LogIn({ setIsAuthenticated }) {
                 placeholder="Email"
                 className="w-full border p-2 rounded"
               />
-              <ErrorMessage name="email" component="div" className="text-red-500 text-sm" />
+              <ErrorMessage name="email" component="div" className="text-black-900 text-sm" />
             </div>
 
             <div>
@@ -69,20 +69,20 @@ function LogIn({ setIsAuthenticated }) {
                 placeholder="Password"
                 className="w-full border p-2 rounded"
               />
-              <ErrorMessage name="password" component="div" className="text-red-500 text-sm" />
+              <ErrorMessage name="password" component="div" className="text-black-900 text-sm" />
             </div>
 
             <button
               type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md"
+              className="bg-gradient-to-r from-yellow-400 to-green-600 text-black py-2 rounded-3xl font-bold"
             >
               Login
             </button>
           </Form>
         </Formik>
-        <p className="text-center text-sm mt-4">
+        <p className="text-center text-sm mt-4 text-white">
           Don’t have an account?{" "}
-          <Link to="/signup" className="text-blue-500 hover:underline">
+          <Link to="/signup" className="text-blue-800 underline">
             Sign up
           </Link>
         </p>
