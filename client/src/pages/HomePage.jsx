@@ -41,7 +41,11 @@ export default function HomePage() {
   );
 
   return (
+<<<<<<< HEAD
     <div className="flex min-h-screen bg-gradient-to-br from-pink-300/90 via-purple-400/90 to-pink-500/90">
+=======
+    <div className="flex min-h-screen bg-[#1c0031]">
+>>>>>>> 294703a717b5a629ee07a4e6a2c6ecb191b0d49b
       <Sidebar isOpen={sidebarOpen} toggleSidebar={setSidebarOpen} />
 
       <div className={`flex-1 transition-all duration-300 ${sidebarOpen ? "md:ml-64" : "ml-0 md:ml-64"}`}>
