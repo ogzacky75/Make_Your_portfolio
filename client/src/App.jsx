@@ -24,7 +24,7 @@ function AppWrapper() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      fetch("http://127.0.0.1:5000/me", {
+      fetch("https://make-your-portfolio.onrender.com/me", {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then((res) => {

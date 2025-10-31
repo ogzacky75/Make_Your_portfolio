@@ -7,6 +7,7 @@ import Sidebar from "../components/Sidebar.jsx";
 export default function Favorites() {
   const { token } = useContext(AuthContext);
   const [favorites, setFavorites] = useState([]);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     apiRequest("/favorites", "GET", null, token)
@@ -21,7 +22,7 @@ export default function Favorites() {
 
   return (
     <div className="p-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-      <Sidebar/>
+      <Sidebar isOpen={sidebarOpen} toggleSidebar={setSidebarOpen}/>
       
       {favorites.map((fav) => (
         <TemplateCard key={fav.id} template={fav.template} onRemove={() => handleRemove(fav.template.id)} />

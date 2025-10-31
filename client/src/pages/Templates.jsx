@@ -8,6 +8,7 @@ export default function Templates() {
   const [templates, setTemplates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     if (!token) {
@@ -71,7 +72,7 @@ export default function Templates() {
   return (
   <div className="flex min-h-screen bg-gradient-to-br from-[#0a0014] via-[#120027] to-[#1e003a] text-gray-100">
     <aside className="w-64 bg-[#0a0014]/90 border-r border-purple-800/40 shadow-lg hidden md:block">
-      <Sidebar />
+      <Sidebar isOpen={sidebarOpen} toggleSidebar={setSidebarOpen}/>
     </aside>
 
     <main className="flex-1 p-10 ml-0 md:ml-64">
