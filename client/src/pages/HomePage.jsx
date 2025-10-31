@@ -18,7 +18,7 @@ export default function HomePage() {
       return;
     }
 
-    fetch("http://localhost:5000/templates", {
+    fetch("https://make-your-portfolio.onrender.com/templates", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {

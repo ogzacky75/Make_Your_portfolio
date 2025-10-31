@@ -9,7 +9,7 @@ export default function PortfolioPage() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    fetch(`http://127.0.0.1:5000/portfolios/${slug}`, {
+    fetch(`https://make-your-portfolio.onrender.com/portfolios/${slug}`, {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     })
       .then((res) => {

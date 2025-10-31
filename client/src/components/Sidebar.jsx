@@ -13,7 +13,7 @@ const Sidebar = ({ isOpen = false, toggleSidebar = () => {} }) => {
       return;
     }
 
-    fetch("http://127.0.0.1:5000/me", {
+    fetch("https://make-your-portfolio.onrender.com/me", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {
@@ -43,13 +43,6 @@ const Sidebar = ({ isOpen = false, toggleSidebar = () => {} }) => {
         ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 w-56`}
     >
       
-      <div className="p-4 border-b border-pink-200">
-        <h2 className="text-xl font-black bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent text-center">
-          Portfolio Generator
-        </h2>
-      </div>
-
-    
       <div className="flex-1 py-4 overflow-y-auto">
         <ul className="space-y-2 px-3">
           {menuItems.map((item) => (

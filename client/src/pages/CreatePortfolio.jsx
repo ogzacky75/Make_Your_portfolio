@@ -29,7 +29,7 @@ export default function CreatePortfolio() {
 
   useEffect(() => {
     if (!token) return;
-    fetch("http://localhost:5000/templates", {
+    fetch("https://make-your-portfolio.onrender.com/templates", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -57,7 +57,7 @@ export default function CreatePortfolio() {
         projects,
       };
 
-      const res = await fetch("http://localhost:5000/portfolios", {
+      const res = await fetch("https://make-your-portfolio.onrender.com/portfolios", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
