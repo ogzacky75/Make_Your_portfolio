@@ -47,9 +47,15 @@ def create_app():
     template_api.init_app(app)
     favorite_api.init_app(app)
 
+    @app.route("/")
+    def index():
+        return {"message": "Make Your Portfolio API running successfully 🎨"}
+
     return app
+
 
 app = create_app()
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
