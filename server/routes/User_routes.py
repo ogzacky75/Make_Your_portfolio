@@ -37,7 +37,7 @@ class LoginResource(Resource):
         if not user or not user.check_password(password):
             return {"error": "Invalid email or password"}, 401
 
-        access_token = create_access_token(identity=user.id)
+        access_token = create_access_token(identity=str(user.id))
         return {
             "message": "Login successful",
             "access_token": access_token,
@@ -48,7 +48,7 @@ class LoginResource(Resource):
 class MeResource(Resource):
     @jwt_required()
     def get(self):
-        current_user_id = get_jwt_identity()
+        current_user_id = int(get_jwt_identity())
         user = User.query.get(current_user_id)
         if not user:
             return {"error": "User not found"}, 404
