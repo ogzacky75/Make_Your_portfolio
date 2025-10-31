@@ -41,72 +41,132 @@ export default function HomePage() {
   );
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-gradient-to-br from-pink-300/90 via-purple-400/90 to-pink-500/90">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={setSidebarOpen} />
 
       <div className={`flex-1 transition-all duration-300 ${sidebarOpen ? "md:ml-64" : "ml-0 md:ml-64"}`}>
-        <div className="p-4 bg-white shadow-sm flex items-center justify-between md:hidden">
-          <button onClick={() => setSidebarOpen(true)} className="text-gray-600 hover:text-indigo-600">
+        
+        <div className="p-4 bg-white/90 backdrop-blur-sm shadow-lg flex items-center justify-between md:hidden">
+          <button 
+            onClick={() => setSidebarOpen(true)} 
+            className="text-purple-800 hover:text-pink-700 transition-colors font-bold"
+          >
             <i className="fas fa-bars text-2xl"></i>
           </button>
-          <h1 className="text-lg font-semibold text-gray-800">Portfolio Generator</h1>
+          <h1 className="text-xl font-extrabold text-purple-900">Portfolio Generator</h1>
         </div>
 
-        <div className="p-8">
-          <header className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-800 mb-4">Welcome to the Portfolio Generator</h1>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+        <div className="p-6 md:p-8">
+          
+          <header className="text-center mb-12 bg-gradient-to-r from-pink-200 to-pink-100 rounded-2xl p-8 shadow-2xl border-2 border-pink-300">
+            <h1 className="text-4xl md:text-6xl font-black text-gray-800 mb-6 tracking-tight">
+              Welcome To Portfolio Generator
+            </h1>
+            <p className="text-xl md:text-2xl text-black max-w-2xl mx-auto leading-relaxed font-bold">
               Create your own customized portfolio with important credentials.
               Choose from our beautiful templates and showcase your work professionally.
             </p>
           </header>
 
+         
           <section className="templates-section">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-gray-800 mb-2">Explore Our Templates</h2>
-              <p className="text-gray-600">Find the perfect template to showcase your skills and experience.</p>
+            <div className="text-center mb-8 bg-gradient-to-r from-purple-600 to-purple-700 rounded-xl p-6 shadow-xl border-2 border-purple-500">
+              <h2 className="text-4xl font-black text-white mb-3 tracking-wide">
+                Explore Our Templates
+              </h2>
+              <p className="text-white text-xl font-bold">Find the perfect template to showcase your skills and experience.</p>
             </div>
 
-            <div className="max-w-md mx-auto mb-8">
+          
+            <div className="max-w-2xl mx-auto mb-10">
               <input
                 type="text"
                 placeholder="Search templates..."
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                className="w-full px-6 py-4 border-3 border-purple-500 rounded-xl focus:outline-none focus:ring-4 focus:ring-pink-500 focus:border-transparent bg-white/95 backdrop-blur-sm shadow-2xl text-lg font-bold text-purple-900 placeholder-purple-600 lowercase"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
 
-            {error && <div className="text-center text-red-500 font-medium mb-4">{error}</div>}
+            {error && (
+              <div className="text-center bg-red-100 border-2 border-red-500 text-red-800 px-6 py-4 rounded-xl max-w-md mx-auto mb-6 font-bold text-lg">
+                {error}
+              </div>
+            )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {loading ? (
-                <div className="col-span-full text-center py-12 text-gray-500">Loading templates...</div>
+                <div className="col-span-full text-center py-16 bg-white/95 backdrop-blur-md rounded-xl shadow-xl border-2 border-white/30">
+                  <div className="animate-spin rounded-full h-16 w-16 border-b-3 border-pink-700 mx-auto mb-6"></div>
+                  <p className="text-gray-800 text-xl font-bold">Loading templates...</p>
+                </div>
               ) : filteredTemplates.length > 0 ? (
                 filteredTemplates.map((template) => (
-                  <div key={template.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-                    <div className="h-48 bg-gray-200 flex items-center justify-center">
+                  <div 
+                    key={template.id} 
+                    className="bg-white/95 backdrop-blur-md rounded-xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 hover:scale-105 border-2 border-white/30"
+                  >
+                    <div className="h-52 bg-gradient-to-br from-pink-100 to-purple-100 flex items-center justify-center">
                       {template.image ? (
-                        <img src={template.image} alt={template.name} className="w-full h-full object-cover" />
+                        <img 
+                          src={template.image} 
+                          alt={template.name} 
+                          className="w-full h-full object-cover" 
+                        />
                       ) : (
-                        <div className="text-gray-500 text-center">
-                          <i className="fas fa-image text-4xl mb-2"></i>
-                          <p>Template Preview</p>
+                        <div className="text-purple-700 text-center">
+                          <i className="fas fa-image text-6xl mb-4 opacity-70"></i>
+                          <p className="font-bold text-lg">Template preview</p>
                         </div>
                       )}
                     </div>
-                    <div className="p-4">
-                      <h3 className="text-xl font-semibold text-gray-800 mb-2">{template.name}</h3>
-                      <p className="text-gray-600 mb-4">{template.description || "Professional portfolio template"}</p>
-                      <Link to={`/create-portfolio`} state={{ template }} className="inline-block bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+                    <div className="p-6">
+                      <h3 className="text-2xl font-black text-gray-900 mb-3">{template.name}</h3>
+                      <p className="text-gray-700 mb-5 leading-relaxed font-medium text-lg">
+                        {template.description || "Professional portfolio template"}
+                      </p>
+                      <Link 
+                        to={`/create-portfolio`} 
+                        state={{ template }} 
+                        className="inline-block w-full text-center bg-gradient-to-r from-pink-600 to-purple-700 text-white px-6 py-4 rounded-xl hover:from-pink-700 hover:to-purple-800 transition-all duration-300 font-black text-lg shadow-lg hover:shadow-xl"
+                      >
                         Use Template
                       </Link>
                     </div>
                   </div>
                 ))
               ) : (
-                <div className="col-span-full text-center py-12 text-gray-500">No templates found</div>
+                <div className="col-span-full text-center py-16 bg-white/95 backdrop-blur-md rounded-xl shadow-xl border-2 border-white/30">
+                  <i className="fas fa-search text-5xl text-purple-700 mb-6 opacity-70"></i>
+                  <h3 className="text-2xl font-black text-gray-900 mb-3">No templates found</h3>
+                  <p className="text-gray-700 font-bold text-lg">Try adjusting your search terms</p>
+                </div>
               )}
+            </div>
+          </section>
+
+          
+          <section className="mt-16 text-center bg-white/95 backdrop-blur-md rounded-2xl p-10 shadow-2xl border-2 border-white/30">
+            <h3 className="text-3xl font-black bg-gradient-to-r from-purple-700 to-pink-700 bg-clip-text text-transparent mb-6">
+              Ready To Showcase Your Work?
+            </h3>
+            <p className="text-gray-800 text-xl mb-6 font-bold leading-relaxed">
+              Create a stunning portfolio that reflects your unique style and professional achievements.
+            </p>
+            <div className="flex justify-center gap-8 text-purple-800 font-bold text-lg">
+              <div className="flex items-center">
+                <i className="fas fa-palette text-2xl mr-3"></i>
+                <span className="lowercase">Customizable</span>
+              </div>
+              <div className="flex items-center">
+                <i className="fas fa-bolt text-2xl mr-3"></i>
+                <span className="lowercase">Fast & easy</span>
+              </div>
+              <div className="flex items-center">
+                <i className="fas fa-mobile-alt text-2xl mr-3"></i>
+                <span className="lowercase">Responsive</span>
+              </div>
             </div>
           </section>
         </div>

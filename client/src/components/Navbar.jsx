@@ -24,11 +24,9 @@ const Navbar = ({ setIsAuthenticated }) => {
 
           <ul className="flex space-x-4">
             <li>
-            </li>
-            <li>
               <button
                 onClick={handleLogout}
-                className="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-md text-sm"
+                className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 hover:from-pink-600 hover:via-purple-600 hover:to-blue-600 text-white px-4 py-2 rounded-lg font-bold shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105"
               >
                 Logout
               </button>
