@@ -10,6 +10,8 @@ export default function Templates() {
   const [error, setError] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  const API_BASE = "https://make-your-portfolio.onrender.com";
+
   useEffect(() => {
     if (!token) {
       setError("Unauthorized — please log in first.");
@@ -17,7 +19,7 @@ export default function Templates() {
       return;
     }
 
-    fetch("https://make-your-portfolio.onrender.com/templates", {
+    fetch(`${API_BASE}/templates`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {
@@ -26,23 +28,26 @@ export default function Templates() {
       })
       .then((data) => {
         setTemplates(data);
-        setLoading(false);
       })
       .catch((err) => {
         setError(err.message);
-        setLoading(false);
-      });
+      })
+      .finally(() => setLoading(false));
   }, [token]);
 
   const handleFavorite = async (templateId) => {
     try {
-      const res = await fetch("http://localhost:5000/favorites", {
+      const res = await fetch(`${API_BASE}/favorites`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({ template_id: templateId }),
       });
+
       if (!res.ok) throw new Error("Failed to add favorite");
-      alert("Added to favorites!");
+      alert("Template added to favorites!");
     } catch (err) {
       alert(err.message);
     }
@@ -70,31 +75,30 @@ export default function Templates() {
     );
 
   return (
-  <div className="flex min-h-screen bg-gradient-to-br from-[#0a0014] via-[#120027] to-[#1e003a] text-gray-100">
-    <aside className="w-64 bg-[#0a0014]/90 border-r border-purple-800/40 shadow-lg hidden md:block">
-      <Sidebar isOpen={sidebarOpen} toggleSidebar={setSidebarOpen}/>
-    </aside>
+    <div className="flex min-h-screen bg-gradient-to-br from-[#0a0014] via-[#120027] to-[#1e003a] text-gray-100">
+      <aside className="w-64 bg-[#0a0014]/90 border-r border-purple-800/40 shadow-lg hidden md:block">
+        <Sidebar isOpen={sidebarOpen} toggleSidebar={setSidebarOpen} />
+      </aside>
 
-    <main className="flex-1 p-10 ml-0 md:ml-64">
-      <h1 className="text-4xl font-extrabold text-purple-400 mb-8 text-center md:text-left">
-        Explore Templates
-      </h1>
+      <main className="flex-1 p-10 ml-0 md:ml-64">
+        <h1 className="text-4xl font-extrabold text-purple-400 mb-8 text-center md:text-left">
+          Explore Templates
+        </h1>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {templates.map((template) => (
-          <div
-            key={template.id}
-            className="bg-[#150022] rounded-2xl p-6 shadow-lg hover:shadow-purple-500/30 transition-all duration-300 hover:-translate-y-1 border border-purple-800/30"
-          >
-            <TemplateCard
-              template={template}
-              onFavorite={() => handleFavorite(template.id)}
-            />
-          </div>
-        ))}
-      </div>
-    </main>
-  </div>
-);
-
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {templates.map((template) => (
+            <div
+              key={template.id}
+              className="bg-[#150022] rounded-2xl p-6 shadow-lg hover:shadow-purple-500/30 transition-all duration-300 hover:-translate-y-1 border border-purple-800/30"
+            >
+              <TemplateCard
+                template={template}
+                onFavorite={() => handleFavorite(template.id)}
+              />
+            </div>
+          ))}
+        </div>
+      </main>
+    </div>
+  );
 }
