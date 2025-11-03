@@ -55,6 +55,62 @@ class MeResource(Resource):
         return {"id": user.id, "username": user.username, "email": user.email}, 200
 
 
+class UserResource(Resource):
+    @jwt_required()
+    def get(self, user_id):
+        """Get user profile by ID"""
+        current_user_id = int(get_jwt_identity())
+        
+        if current_user_id != int(user_id):
+            return {"error": "Unauthorized"}, 403
+        
+        user = User.query.get(user_id)
+        if not user:
+            return {"error": "User not found"}, 404
+        
+        return {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email
+        }, 200
+    
+    @jwt_required()
+    def patch(self, user_id):
+        """Update user profile"""
+        current_user_id = int(get_jwt_identity())
+        
+        if current_user_id != int(user_id):
+            return {"error": "Unauthorized"}, 403
+        
+        user = User.query.get(user_id)
+        if not user:
+            return {"error": "User not found"}, 404
+        
+        data = request.get_json()
+        
+        if "username" in data:
+            existing = User.query.filter(
+                User.username == data["username"],
+                User.id != user_id
+            ).first()
+            if existing:
+                return {"error": "Username already taken"}, 400
+            user.username = data["username"]
+        
+        if "password" in data and data["password"]:
+            user.set_password(data["password"])
+        
+        db.session.commit()
+        
+        return {
+            "message": "Profile updated successfully",
+            "id": user.id,
+            "username": user.username,
+            "email": user.email
+        }, 200
+
+
 api.add_resource(RegisterResource, '/register')
 api.add_resource(LoginResource, '/login')
 api.add_resource(MeResource, '/me')
+api.add_resource(UserResource, '/users/<int:user_id>')  
