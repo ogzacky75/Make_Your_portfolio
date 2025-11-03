@@ -28,7 +28,7 @@ const Sidebar = ({ isOpen = false, toggleSidebar = () => {} }) => {
   const menuItems = [
     { id: "home", label: "Home", icon: "fas fa-home", path: "/home" },
     { id: "templates", label: "Templates", icon: "fas fa-palette", path: "/templates" },
-    { id: "favorites", label: "Favorites", icon: "fas fa-star", path: "/favorites" },
+    { id: "favorites", label: "Favorites", icon: "fas fa-heart", path: "/favorites" },
     { id: "portfolios", label: "My Portfolios", icon: "fas fa-briefcase", path: "/portfolios" },
   ];
 
@@ -43,13 +43,14 @@ const Sidebar = ({ isOpen = false, toggleSidebar = () => {} }) => {
         ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 w-56`}
     >
       
+      {/* Header */}
       <div className="p-4 border-b border-pink-200">
         <h2 className="text-xl font-black bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent text-center">
           Portfolio Generator
         </h2>
       </div>
 
-    
+      {/* Navigation Menu */}
       <div className="flex-1 py-4 overflow-y-auto">
         <ul className="space-y-2 px-3">
           {menuItems.map((item) => (
@@ -68,7 +69,7 @@ const Sidebar = ({ isOpen = false, toggleSidebar = () => {} }) => {
         </ul>
       </div>
 
-
+      {/* User Section */}
       <div className="p-4 border-t border-pink-200 bg-gradient-to-r from-blue-100 to-blue-200">
         {loading ? (
           <div className="flex items-center space-x-3">
@@ -102,6 +103,7 @@ const Sidebar = ({ isOpen = false, toggleSidebar = () => {} }) => {
         )}
       </div>
       
+      {/* Close Button for Mobile */}
       {isOpen && (
         <button
           onClick={() => toggleSidebar(false)}
