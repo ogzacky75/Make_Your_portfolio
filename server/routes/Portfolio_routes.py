@@ -173,7 +173,7 @@ class PortfolioListResource(Resource):
         return {
             "message": "Portfolio created successfully",
             "slug": portfolio.slug,
-            "portfolio_url": f"{os.environ.get('FRONTEND_URL', 'https://make-your-portfolio.onrender.com')}/portfolios/{portfolio.slug}"
+            "portfolio_url": f"{os.environ.get('BACKEND_URL', 'https://make-your-portfolio.onrender.com')}/portfolios/{portfolio.slug}",
             "portfolio": serialize_portfolio(portfolio)
         }, 201
 
