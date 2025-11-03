@@ -1,6 +1,7 @@
 from app import create_app, db
 from datetime import datetime
 from werkzeug.security import generate_password_hash
+from uuid import uuid4
 
 from models import (
     User, Template, Favorite, Portfolio,
@@ -9,46 +10,49 @@ from models import (
 
 app = create_app()
 
-# ------------------ Helper Functions ------------------ #
 
-def generate_slug(title):
-    """Generate a URL-friendly slug from a title."""
-    return title.lower().replace(" ", "-")
+def generate_unique_slug(username):
+    """Generate a unique slug using username + random ID."""
+    unique_part = uuid4().hex[:6]
+    return f"{username.lower().replace(' ', '-')}-{unique_part}"
 
-# ------------------ Seed Functions ------------------ #
 
 def seed_users():
     users = [
-        User(username='Jane James', email='janeJames@gmail.com', password=generate_password_hash('janepassword23')),
-        User(username='Nora Smith', email='noraSmith@gmail.com', password=generate_password_hash('norapassword12')),
-        User(username='Jade Keith', email='jadeKeith@gmail.com', password=generate_password_hash('jadepassword45')),
-        User(username='Liam Brown', email='liamBrown@gmail.com', password=generate_password_hash('liampassword67'))
+        User(username='Jane James', email='janejames@gmail.com', password=generate_password_hash('janepassword23')),
+        User(username='Nora Smith', email='norasmith@gmail.com', password=generate_password_hash('norapassword12')),
+        User(username='Jade Keith', email='jadekeith@gmail.com', password=generate_password_hash('jadepassword45')),
+        User(username='Liam Brown', email='liambrown@gmail.com', password=generate_password_hash('liampassword67'))
     ]
     db.session.add_all(users)
     db.session.commit()
-    print("Users seeded successfully.")
+    print("✅ Users seeded successfully.")
 
 def seed_templates():
     templates = [
         Template(
             name='Modern Portfolio',
-            image='https://example.com/images/modern.png',
-            description='A sleek and modern portfolio template perfect for showcasing your work.'
+            image='https://yourcdn.com/images/modern.png',
+            description='A sleek and modern portfolio template perfect for showcasing your work.',
+            preview_url='/templates/modern'
         ),
         Template(
             name='Creative Portfolio',
-            image='https://example.com/images/creative.png',
-            description='A vibrant and creative portfolio template designed to highlight your unique style.'
+            image='https://yourcdn.com/images/creative.png',
+            description='A vibrant and creative portfolio template designed to highlight your unique style.',
+            preview_url='/templates/creative'
         ),
         Template(
             name='Professional Portfolio',
-            image='https://example.com/images/professional.png',
-            description='A clean and professional portfolio template ideal for business presentations.'
+            image='https://yourcdn.com/images/professional.png',
+            description='A clean and professional portfolio template ideal for business presentations.',
+            preview_url='/templates/professional'
         ),
         Template(
             name='Developer Portfolio',
-            image='https://example.com/images/developer.png',
-            description='A technical and structured portfolio template tailored for developers.'
+            image='https://yourcdn.com/images/developer.png',
+            description='A technical and structured portfolio template tailored for developers.',
+            preview_url='/templates/developer'
         )
     ]
     db.session.add_all(templates)
@@ -64,26 +68,23 @@ def seed_favorites():
     ]
     db.session.add_all(favorites)
     db.session.commit()
-    print("Favorites seeded successfully.")
+    print("✅ Favorites seeded successfully.")
 
 def seed_portfolios():
-    portfolio_data = [
-        {"user_id": 1, "template_id": 1, "title": "Jane James - Full Stack Developer"},
-        {"user_id": 2, "template_id": 2, "title": "Nora Smith - UX Designer"},
-        {"user_id": 3, "template_id": 3, "title": "Jade Keith - Software Engineer"},
-        {"user_id": 4, "template_id": 4, "title": "Liam Brown - Data Analyst"},
-    ]
-
+    users = User.query.all()
+    templates = Template.query.all()
     portfolios = []
-    for data in portfolio_data:
-        portfolios.append(
-            Portfolio(
-                user_id=data["user_id"],
-                template_id=data["template_id"],
-                title=data["title"],
-                slug=generate_slug(data["title"])
-            )
+
+    for i, user in enumerate(users):
+        template = templates[i % len(templates)]
+        title = f"{user.username} - {template.name}"
+        portfolio = Portfolio(
+            user_id=user.id,
+            template_id=template.id,
+            title=title,
+            slug=generate_unique_slug(user.username)
         )
+        portfolios.append(portfolio)
 
     db.session.add_all(portfolios)
     db.session.commit()
@@ -94,8 +95,8 @@ def seed_personal_info():
         PersonalInfo(
             portfolio_id=1,
             name='Jane James',
-            photo_url='https://example.com/images/jane.jpg',
-            contact_email='janeJames@gmail.com',
+            photo_url='https://yourcdn.com/images/jane.jpg',
+            contact_email='janejames@gmail.com',
             phone='+254712345678',
             linkedin='https://linkedin.com/in/janejames',
             github='https://github.com/janejames',
@@ -104,8 +105,8 @@ def seed_personal_info():
         PersonalInfo(
             portfolio_id=2,
             name='Nora Smith',
-            photo_url='https://example.com/images/nora.jpg',
-            contact_email='noraSmith@gmail.com',
+            photo_url='https://yourcdn.com/images/nora.jpg',
+            contact_email='norasmith@gmail.com',
             phone='+254712987654',
             linkedin='https://linkedin.com/in/norasmith',
             github='https://github.com/norasmith',
@@ -114,8 +115,8 @@ def seed_personal_info():
         PersonalInfo(
             portfolio_id=3,
             name='Jade Keith',
-            photo_url='https://example.com/images/jade.jpg',
-            contact_email='jadeKeith@gmail.com',
+            photo_url='https://yourcdn.com/images/jade.jpg',
+            contact_email='jadekeith@gmail.com',
             phone='+254713123456',
             linkedin='https://linkedin.com/in/jadekeith',
             github='https://github.com/jadekeith',
@@ -124,8 +125,8 @@ def seed_personal_info():
         PersonalInfo(
             portfolio_id=4,
             name='Liam Brown',
-            photo_url='https://example.com/images/liam.jpg',
-            contact_email='liamBrown@gmail.com',
+            photo_url='https://yourcdn.com/images/liam.jpg',
+            contact_email='liambrown@gmail.com',
             phone='+254711223344',
             linkedin='https://linkedin.com/in/liambrown',
             github='https://github.com/liambrown',
@@ -160,10 +161,10 @@ def seed_experience():
 
 def seed_projects():
     projects = [
-        Project(portfolio_id=1, project_name='Portfolio Website', description='A modern portfolio built with React and Flask.', image_url='https://example.com/images/portfolio.png', project_link='https://github.com/janejames/portfolio'),
-        Project(portfolio_id=2, project_name='UI Kit', description='Custom UI kit for rapid prototyping.', image_url='https://example.com/images/uikit.png', project_link='https://github.com/norasmith/uikit'),
-        Project(portfolio_id=3, project_name='Task Manager', description='A task management app built with React.', image_url='https://example.com/images/task.png', project_link='https://github.com/jadekeith/taskmanager'),
-        Project(portfolio_id=4, project_name='Data Dashboard', description='A real-time analytics dashboard for sales data.', image_url='https://example.com/images/dashboard.png', project_link='https://github.com/liambrown/dashboard')
+        Project(portfolio_id=1, project_name='Portfolio Website', description='A modern portfolio built with React and Flask.', image_url='https://yourcdn.com/images/portfolio.png', project_link='https://github.com/janejames/portfolio'),
+        Project(portfolio_id=2, project_name='UI Kit', description='Custom UI kit for rapid prototyping.', image_url='https://yourcdn.com/images/uikit.png', project_link='https://github.com/norasmith/uikit'),
+        Project(portfolio_id=3, project_name='Task Manager', description='A task management app built with React.', image_url='https://yourcdn.com/images/task.png', project_link='https://github.com/jadekeith/taskmanager'),
+        Project(portfolio_id=4, project_name='Data Dashboard', description='A real-time analytics dashboard for sales data.', image_url='https://yourcdn.com/images/dashboard.png', project_link='https://github.com/liambrown/dashboard')
     ]
     db.session.add_all(projects)
     db.session.commit()
@@ -184,15 +185,17 @@ def seed_skills():
     db.session.commit()
     print("Skills seeded successfully.")
 
-# ------------------ Main Script ------------------ #
 
 if __name__ == "__main__":
     with app.app_context():
-        print("Dropping existing tables...")
-        db.drop_all()
-
-        print("Creating new tables...")
-        db.create_all()
+        RESET_DB = True 
+        if RESET_DB:
+            print("Dropping existing tables...")
+            db.drop_all()
+            print("Creating new tables...")
+            db.create_all()
+        else:
+            print("⏭ Skipping database reset...")
 
         seed_users()
         seed_templates()
@@ -204,4 +207,4 @@ if __name__ == "__main__":
         seed_projects()
         seed_skills()
 
-        print("\nAll data seeded successfully!")
+        print("\n All data seeded successfully!")

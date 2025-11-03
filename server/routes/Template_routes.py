@@ -15,7 +15,6 @@ def serialize_template(template):
     }
 
 class TemplateListResource(Resource):
-    @jwt_required()
     def get(self):
         templates = Template.query.all()
         return [serialize_template(t) for t in templates], 200
@@ -45,7 +44,6 @@ class TemplateListResource(Resource):
 
 
 class TemplateDetailResource(Resource):
-    @jwt_required()
     def get(self, id):
         template = Template.query.get(id)
         if not template:

@@ -2,6 +2,9 @@ from flask import request
 from flask_restful import Resource, Api
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models import db, Portfolio, User, Template
+from flask import render_template
+from os import environ
+import os
 
 api = Api()
 
@@ -76,14 +79,12 @@ def serialize_portfolio(portfolio):
 class PortfolioListResource(Resource):
     @jwt_required()
     def get(self):
-        """Get all portfolios for the authenticated user."""
         current_user_id = get_jwt_identity()
         portfolios = Portfolio.query.filter_by(user_id=current_user_id).all()
         return [serialize_portfolio(p) for p in portfolios], 200
 
     @jwt_required()
     def post(self):
-        """Create a new portfolio with all details for the authenticated user."""
         current_user_id = get_jwt_identity()
         data = request.get_json()
 
@@ -100,7 +101,7 @@ class PortfolioListResource(Resource):
         )
         portfolio.generate_slug(user.username)
         db.session.add(portfolio)
-        db.session.commit()  # commit first to get portfolio.id
+        db.session.commit()  
 
         portfolio_id = portfolio.id
 
@@ -122,7 +123,7 @@ class PortfolioListResource(Resource):
         from models import Education, Experience, Project, Skill
 
         for edu in data.get("education", []):
-            if not isinstance(edu, dict):  # skip invalid entries
+            if not isinstance(edu, dict):  
                 continue
             e = Education(
                 portfolio_id=portfolio_id,
@@ -160,7 +161,7 @@ class PortfolioListResource(Resource):
 
         for skill in data.get("skills", []):
             skill_name = skill if isinstance(skill, str) else skill.get("skill_name")
-            if skill_name:  # skip empty
+            if skill_name:  
                 s = Skill(
                     portfolio_id=portfolio_id,
                     skill_name=skill_name
@@ -172,7 +173,7 @@ class PortfolioListResource(Resource):
         return {
             "message": "Portfolio created successfully",
             "slug": portfolio.slug,
-            "portfolio_url": f"/portfolios/{portfolio.slug}"
+            "portfolio_url": f"{os.environ.get('FRONTEND_URL', 'https://make-your-portfolio.onrender.com')}/portfolios/{portfolio.slug}"
         }, 201
 
 
@@ -180,16 +181,16 @@ class PortfolioListResource(Resource):
 
 class PortfolioDetailResource(Resource):
     def get(self, slug):
-        """Public route — view a full portfolio by slug."""
         portfolio = Portfolio.query.filter_by(slug=slug).first()
         if not portfolio:
             return {"error": "Portfolio not found"}, 404
-
-        return serialize_portfolio(portfolio), 200
+        
+        template_file = f"templates_portfolio/template{portfolio.template.id}.html"
+        
+        return render_template(template_file, portfolio=portfolio), 200
 
     @jwt_required()
     def delete(self, slug):
-        """Delete a user's portfolio by slug."""
         current_user_id = get_jwt_identity()
         portfolio = Portfolio.query.filter_by(slug=slug, user_id=current_user_id).first()
 
