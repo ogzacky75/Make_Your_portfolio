@@ -43,8 +43,8 @@ function LogIn({ setIsAuthenticated }) {
   };
 
   return (
-    <main className="flex items-center justify-center min-h-screen bg-gray-100">
-      <section className="bg-pink-400 p-8 w-96 rounded-2xl shadow-lg pt-10 pb-20">
+    <main className="flex items-center justify-center min-h-screen bg-green-500">
+      <section className="bg-gray-300 p-8 w-96 rounded-2xl shadow-lg pt-10 pb-20">
         <h1 className="text-2xl font-bold mb-4 text-center">Login</h1>
         <Formik
           initialValues={{ email: "", password: "" }}
@@ -74,15 +74,15 @@ function LogIn({ setIsAuthenticated }) {
 
             <button
               type="submit"
-              className="bg-gradient-to-r from-yellow-400 to-green-600 text-black py-2 rounded-3xl font-bold"
+              className="bg-green-600 hover:bg-green-700 text-white py-2 rounded-md"
             >
               Login
             </button>
           </Form>
         </Formik>
-        <p className="text-center text-sm mt-4 text-white">
+        <p className="text-center text-sm mt-4">
           Don’t have an account?{" "}
-          <Link to="/signup" className="text-blue-800 underline">
+          <Link to="/signup" className="text-blue-900 font-bold underline">
             Sign up
           </Link>
         </p>
