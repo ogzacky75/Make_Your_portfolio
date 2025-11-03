@@ -1,4 +1,4 @@
-from flask import request, make_response
+from flask import request, make_response, render_template, Response
 from flask_restful import Resource, Api
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models import db, Portfolio, User, Template
@@ -187,11 +187,9 @@ class PortfolioDetailResource(Resource):
             return {"error": "Portfolio not found"}, 404
         
         template_file = f"templates_portfolio/template{portfolio.template.id}.html"
-        html = render_template(template_file, portfolio=portfolio)
+        rendered_html = render_template(template_file, portfolio=portfolio)
 
-        response = make_response(html)
-        response.headers["Content-Type"] = "text/html"
-        return response
+        return Response(rendered_html, mimetype="text/html")
         
 
     @jwt_required()
