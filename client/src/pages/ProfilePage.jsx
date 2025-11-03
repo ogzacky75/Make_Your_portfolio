@@ -5,17 +5,30 @@
 
     export default function ProfilePage() {
     const [user, setUser] = useState(null);
-    const userId = localStorage.getItem("userId"); 
-    const baseUrl = "https://make-your-portfolio.onrender.com"; 
+    const userId = localStorage.getItem("userId");
+    const token = localStorage.getItem("token");
+    const BASE_URL = "https://make-your-portfolio.onrender.com"; // ✅ Updated to match login API
 
     useEffect(() => {
-        if (userId) {
+        if (userId && token) {
         axios
-            .get(`${baseUrl}/users/${userId}`)
-            .then((res) => setUser(res.data))
-            .catch((err) => console.error("Error fetching user:", err));
+            .get(`${BASE_URL}/users/${userId}`, {
+            headers: { Authorization: `Bearer ${token}` }, // ✅ Added JWT token
+            })
+            .then((res) => {
+            console.log("✅ User data loaded:", res.data);
+            setUser(res.data);
+            })
+            .catch((err) => {
+            console.error("❌ Error fetching user:", err);
+            alert("Failed to load profile");
+            setUser({}); // ✅ Stop infinite loading
+            });
+        } else {
+        console.log("❌ No userId or token found!");
+        setUser({}); // ✅ Stop infinite loading
         }
-    }, [userId]);
+    }, [userId, token]);
 
     const validationSchema = Yup.object({
         username: Yup.string().required("Username is required"),
@@ -38,19 +51,37 @@
             updatedData.password = values.password;
         }
 
-        await axios.patch(`${baseUrl}/users/${userId}`, updatedData);
+        const response = await axios.patch(
+            `${BASE_URL}/users/${userId}`,
+            updatedData,
+            {
+            headers: { Authorization: `Bearer ${token}` }, // ✅ Added JWT token
+            }
+        );
+
+        // ✅ Update local state with the returned data
+        setUser(response.data); // ✅ Fixed from response.data.user to response.data
 
         alert("Profile updated successfully!");
-        resetForm();
+        resetForm({ values: { ...values, password: "", confirmPassword: "" } });
         } catch (error) {
         console.error("Error updating profile:", error);
-        alert("Failed to update profile");
+        alert(error.response?.data?.error || "Failed to update profile");
         } finally {
         setSubmitting(false);
         }
     };
 
     if (!user) return <p>Loading profile...</p>;
+    
+    // ✅ Handle case where user object is empty (error state)
+    if (Object.keys(user).length === 0) {
+        return (
+        <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md mt-10">
+            <p className="text-center text-red-500">Please log in to view your profile.</p>
+        </div>
+        );
+    }
 
     return (
         <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md mt-10">

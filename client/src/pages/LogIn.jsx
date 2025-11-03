@@ -32,6 +32,7 @@ function LogIn({ setIsAuthenticated }) {
 
       localStorage.setItem("token", data.access_token);
       localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("userId", data.user.id);
       setIsAuthenticated(true);
 
       resetForm();
