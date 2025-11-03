@@ -41,6 +41,7 @@ export default function CreatePortfolio() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!selectedTemplate) {
       alert("Please select a template!");
       return;
@@ -51,7 +52,7 @@ export default function CreatePortfolio() {
     try {
       const payload = {
         title,
-        template_id: selectedTemplate,
+        template_id: Number(selectedTemplate), 
         personal_info: personalInfo,
         skills,
         education,
@@ -75,8 +76,8 @@ export default function CreatePortfolio() {
       const publicURL = `${window.location.origin}/portfolio/${data.slug}`;
       setPortfolioURL(publicURL);
 
-      alert("🎉 Portfolio created successfully!");
-      navigate(`/portfolio/${data.slug}`);
+      alert("Portfolio created successfully!");
+      window.location.href = `${API_BASE}/portfolios/${data.slug}`;
     } catch (err) {
       alert(err.message);
     } finally {
@@ -164,9 +165,7 @@ export default function CreatePortfolio() {
             <button
               type="button"
               className="bg-red-500 text-white px-3 rounded"
-              onClick={() =>
-                setSkills(skills.filter((_, index) => index !== i))
-              }
+              onClick={() => setSkills(skills.filter((_, index) => index !== i))}
             >
               ✕
             </button>
@@ -238,6 +237,7 @@ export default function CreatePortfolio() {
             href={portfolioURL}
             className="text-blue-600 underline"
             target="_blank"
+            rel="noopener noreferrer"
           >
             {portfolioURL}
           </a>

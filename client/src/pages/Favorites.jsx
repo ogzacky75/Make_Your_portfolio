@@ -21,12 +21,16 @@ export default function Favorites() {
   };
 
   return (
-    <div className="p-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-      <Sidebar isOpen={sidebarOpen} toggleSidebar={setSidebarOpen}/>
-      
-      {favorites.map((fav) => (
-        <TemplateCard key={fav.id} template={fav.template} onRemove={() => handleRemove(fav.template.id)} />
-      ))}
+    <div >
+      <Sidebar isOpen={sidebarOpen} toggleSidebar={setSidebarOpen} />
+      <div className="">
+        <div className="p-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          {favorites.map((fav) => (
+            <TemplateCard key={fav.id} template={fav.template} onRemove={() => handleRemove(fav.template.id)} />
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
