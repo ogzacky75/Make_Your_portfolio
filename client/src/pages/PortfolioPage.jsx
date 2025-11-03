@@ -25,12 +25,10 @@ export default function PortfolioPage() {
   if (error) return <div className="p-6 text-center text-red-500">Error: {error}</div>;
   if (!portfolio) return <div className="p-6 text-center text-gray-500">No portfolio found.</div>;
 
-  const { personal_info, education, experience, projects, skills } = portfolio;
+  const { personal_info, education = [], experience = [], projects = [], skills = [] } = portfolio;
 
   return (
     <div className="max-w-6xl mx-auto p-6">
-      
-      {/* Sticky Navbar */}
       <nav className="sticky top-0 bg-white shadow-md z-50 mb-8 rounded">
         <ul className="flex justify-center gap-6 p-4">
           {personal_info && <li><a href="#about" className="hover:text-blue-600 font-medium">About</a></li>}
@@ -41,7 +39,6 @@ export default function PortfolioPage() {
         </ul>
       </nav>
 
-      {/* About / Personal Info */}
       {personal_info && (
         <section id="about" className="mb-12 text-center">
           {personal_info.photo_url && (
@@ -67,7 +64,6 @@ export default function PortfolioPage() {
         </section>
       )}
 
-      {/* Education */}
       {education.length > 0 && (
         <section id="education" className="mb-12">
           <h2 className="text-3xl font-bold mb-6 border-b-2 border-gray-200 pb-2">Education</h2>
@@ -83,7 +79,6 @@ export default function PortfolioPage() {
         </section>
       )}
 
-      {/* Experience */}
       {experience.length > 0 && (
         <section id="experience" className="mb-12">
           <h2 className="text-3xl font-bold mb-6 border-b-2 border-gray-200 pb-2">Experience</h2>
@@ -100,21 +95,17 @@ export default function PortfolioPage() {
         </section>
       )}
 
-      {/* Projects */}
       {projects.length > 0 && (
         <section id="projects" className="mb-12">
           <h2 className="text-3xl font-bold mb-6 border-b-2 border-gray-200 pb-2">Projects</h2>
           <div className="grid md:grid-cols-2 gap-6">
             {projects.map((proj, idx) => (
               <div key={idx} className="p-4 border rounded-lg shadow hover:shadow-lg transition">
-                <h3 className="font-semibold text-xl mb-1">{proj.project_name}</h3>
+                <h3 className="font-semibold text-xl mb-1">{proj.name}</h3>
                 <p className="text-gray-700 mb-2">{proj.description}</p>
-                {proj.image_url && (
-                  <img src={proj.image_url} alt={proj.project_name} className="w-full rounded mb-2" />
-                )}
-                {proj.project_link && (
+                {proj.link && (
                   <a
-                    href={proj.project_link}
+                    href={proj.link}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-600 font-semibold underline"
@@ -128,7 +119,6 @@ export default function PortfolioPage() {
         </section>
       )}
 
-      {/* Skills */}
       {skills.length > 0 && (
         <section id="skills" className="mb-12">
           <h2 className="text-3xl font-bold mb-6 border-b-2 border-gray-200 pb-2">Skills</h2>
@@ -138,13 +128,12 @@ export default function PortfolioPage() {
                 key={idx}
                 className="bg-blue-100 text-blue-800 px-4 py-1 rounded-full text-sm font-medium"
               >
-                {skill.skill_name}
+                {typeof skill === "string" ? skill : skill.skill_name}
               </span>
             ))}
           </div>
         </section>
       )}
-
     </div>
   );
 }
