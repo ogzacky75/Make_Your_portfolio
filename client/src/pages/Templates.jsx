@@ -89,7 +89,6 @@ export default function Templates() {
 
       <div className={`flex-1 transition-all duration-300 ${sidebarOpen ? "md:ml-64" : "ml-0 md:ml-64"}`}>
         
-        {/* Mobile Header */}
         <div className="p-4 bg-white/90 backdrop-blur-sm shadow-lg flex items-center justify-between md:hidden">
           <button 
             onClick={() => setSidebarOpen(true)} 
@@ -102,7 +101,6 @@ export default function Templates() {
 
         <div className="p-6 md:p-8">
           
-          {/* Templates Section - Direct start without header */}
           <section className="templates-section">
             <div className="text-center mb-8 bg-gradient-to-r from-purple-600 to-purple-700 rounded-xl p-6 shadow-xl border-2 border-purple-500">
               <h2 className="text-4xl font-black text-white mb-3 tracking-wide">
@@ -111,7 +109,6 @@ export default function Templates() {
               <p className="text-white text-xl font-bold">Choose your favorite template and start building your portfolio.</p>
             </div>
 
-            {/* Templates Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
               {templates.map((template) => (
                 <div 
