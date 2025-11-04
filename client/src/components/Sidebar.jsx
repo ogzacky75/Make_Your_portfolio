@@ -142,7 +142,7 @@ const Sidebar = ({ isOpen = false, toggleSidebar = () => {} }) => {
                     onClick={() => {navigate("/profile");}}
                     className="text-left w-full"
                   >
-                    <p className="text-xs text-blue-700 truncate font-bold">{user.email}</p>
+                    {user.email}
 
                   </button>
                   
