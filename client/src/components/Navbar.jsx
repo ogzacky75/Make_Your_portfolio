@@ -14,13 +14,24 @@ const Navbar = ({ setIsAuthenticated }) => {
   return (
     <nav className="bg-gray-800 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-evenly items-center h-16">
           <Link
             to="/home"
             className="text-white text-xl font-bold hover:text-gray-300 transition duration-300"
           >
             MYP
           </Link>
+
+          <ul className="flex space-x-4">
+            <li>
+              <Link
+                to="/profile"
+                className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white hover:text-gray-300 transition duration-300  px-4 py-2 rounded-lg font-medium"
+              >
+                Profile
+              </Link> 
+            </li>
+            </ul>
 
           <ul className="flex space-x-4">
             <li>

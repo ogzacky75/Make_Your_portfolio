@@ -14,6 +14,7 @@ import Navbar from "./components/Navbar.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import PortfolioPage from "./pages/PortfolioPage.jsx";
 import PortfolioListPage from "./pages/PortfolioListPage.jsx";
+import ProfilePage from "./pages/ProfilePage.jsx";  
 
 
 function AppWrapper() {
@@ -45,6 +46,11 @@ function AppWrapper() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/signup" element={<SignUp setIsAuthenticated={setIsAuthenticated} />} />
         <Route path="/login" element={<LogIn setIsAuthenticated={setIsAuthenticated} />} />
+        <Route path="/profile" element={
+          <ProtectedRoute isAuthenticated={isAuthenticated}>
+            <ProfilePage />
+          </ProtectedRoute>
+        } />
         <Route
           path="/home"
           element={

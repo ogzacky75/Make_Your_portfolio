@@ -59,7 +59,7 @@ function LandingPage() {
       </section>
 
       <footer className="text-center py-6 border-t border-purple-800/30 text-gray-400 text-sm">
-        © {new Date().getFullYear()}{" "}
+        &copy; {new Date().getFullYear()}{" "}
         <span className="text-purple-400 font-semibold">Make Your Portfolio</span>. All rights reserved.
       </footer>
     </div>

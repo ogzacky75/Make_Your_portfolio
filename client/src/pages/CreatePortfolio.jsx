@@ -1,13 +1,19 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function CreatePortfolio() {
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const [templates, setTemplates] = useState([]);
-  const [selectedTemplate, setSelectedTemplate] = useState("");
+  const API_BASE = "https://make-your-portfolio.onrender.com";
+
+  const selectedFromTemplates = location.state?.template;
+
+  const [selectedTemplate, setSelectedTemplate] = useState(
+    selectedFromTemplates ? selectedFromTemplates.id : ""
+  );
   const [title, setTitle] = useState("");
   const [loading, setLoading] = useState(false);
   const [portfolioURL, setPortfolioURL] = useState("");
@@ -23,22 +29,19 @@ export default function CreatePortfolio() {
   });
 
   const [skills, setSkills] = useState([""]);
-  const [education, setEducation] = useState([{ institution: "", degree: "", start_year: "", end_year: "" }]);
-  const [experience, setExperience] = useState([{ job_title: "", company: "", start_date: "", end_date: "", description: "" }]);
-  const [projects, setProjects] = useState([{ name: "", description: "", link: "" }]);
-
-  useEffect(() => {
-    if (!token) return;
-    fetch("https://make-your-portfolio.onrender.com/templates", {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((res) => res.json())
-      .then(setTemplates)
-      .catch(console.error);
-  }, [token]);
+  const [education, setEducation] = useState([
+    { institution: "", degree: "", start_year: "", end_year: "" },
+  ]);
+  const [experience, setExperience] = useState([
+    { job_title: "", company: "", start_date: "", end_date: "", description: "" },
+  ]);
+  const [projects, setProjects] = useState([
+    { name: "", description: "", link: "" },
+  ]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!selectedTemplate) {
       alert("Please select a template!");
       return;
@@ -49,7 +52,7 @@ export default function CreatePortfolio() {
     try {
       const payload = {
         title,
-        template_id: selectedTemplate,
+        template_id: Number(selectedTemplate), 
         personal_info: personalInfo,
         skills,
         education,
@@ -57,7 +60,7 @@ export default function CreatePortfolio() {
         projects,
       };
 
-      const res = await fetch("https://make-your-portfolio.onrender.com/portfolios", {
+      const res = await fetch(`${API_BASE}/portfolios`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -69,9 +72,12 @@ export default function CreatePortfolio() {
       if (!res.ok) throw new Error("Failed to create portfolio");
 
       const data = await res.json();
-      setPortfolioURL(`http://localhost:5173/portfolio/${data.slug}`);
+
+      const publicURL = `${window.location.origin}/portfolio/${data.slug}`;
+      setPortfolioURL(publicURL);
+
       alert("Portfolio created successfully!");
-      navigate(`/portfolio/${data.slug}`);
+      window.location.href = `${API_BASE}/portfolios/${data.slug}`;
     } catch (err) {
       alert(err.message);
     } finally {
@@ -80,10 +86,15 @@ export default function CreatePortfolio() {
   };
 
   return (
-    <div className="p-8 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6 text-center">Create Your Portfolio</h1>
+    <div className="p-8 max-w-4xl mx-auto text-gray-800">
+      <h1 className="text-3xl font-bold mb-6 text-center text-purple-600">
+        Create Your Portfolio
+      </h1>
 
-      <form onSubmit={handleSubmit} className="bg-white shadow-lg p-6 rounded-xl space-y-4">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white shadow-lg p-6 rounded-xl space-y-4"
+      >
         <div>
           <label className="block font-semibold mb-1">Portfolio Title</label>
           <input
@@ -96,32 +107,44 @@ export default function CreatePortfolio() {
           />
         </div>
 
-        <div>
-          <label className="block font-semibold mb-1">Choose Template</label>
-          <select
-            value={selectedTemplate}
-            onChange={(e) => setSelectedTemplate(e.target.value)}
-            className="border w-full p-2 rounded"
-            required
-          >
-            <option value="">-- Select Template --</option>
-            {templates.map((t) => (
-              <option key={t.id} value={t.id}>
-                {t.name}
-              </option>
-            ))}
-          </select>
-        </div>
+        {selectedFromTemplates ? (
+          <div className="p-4 border rounded bg-gray-50">
+            <p className="font-semibold text-gray-700 mb-2">
+              Selected Template: {selectedFromTemplates.name}
+            </p>
+            <img
+              src={selectedFromTemplates.image}
+              alt={selectedFromTemplates.name}
+              className="w-full h-48 object-cover rounded-md"
+            />
+          </div>
+        ) : (
+          <div>
+            <label className="block font-semibold mb-1">Template ID</label>
+            <input
+              type="number"
+              placeholder="Enter Template ID"
+              className="border w-full p-2 rounded"
+              value={selectedTemplate}
+              onChange={(e) => setSelectedTemplate(e.target.value)}
+              required
+            />
+          </div>
+        )}
 
         <h2 className="text-xl font-bold mt-6">Personal Info</h2>
         {Object.entries(personalInfo).map(([key, value]) => (
           <div key={key}>
-            <label className="block capitalize mb-1">{key.replace("_", " ")}</label>
+            <label className="block capitalize mb-1">
+              {key.replace("_", " ")}
+            </label>
             <input
               type="text"
               className="border w-full p-2 rounded"
               value={value}
-              onChange={(e) => setPersonalInfo({ ...personalInfo, [key]: e.target.value })}
+              onChange={(e) =>
+                setPersonalInfo({ ...personalInfo, [key]: e.target.value })
+              }
             />
           </div>
         ))}
@@ -148,7 +171,11 @@ export default function CreatePortfolio() {
             </button>
           </div>
         ))}
-        <button type="button" className="bg-blue-500 text-white px-3 py-1 rounded" onClick={() => setSkills([...skills, ""])}>
+        <button
+          type="button"
+          className="bg-blue-500 text-white px-3 py-1 rounded"
+          onClick={() => setSkills([...skills, ""])}
+        >
           + Add Skill
         </button>
 
@@ -179,7 +206,16 @@ export default function CreatePortfolio() {
             />
           </div>
         ))}
-        <button type="button" className="bg-blue-500 text-white px-3 py-1 rounded" onClick={() => setEducation([...education, { institution: "", degree: "" }])}>
+        <button
+          type="button"
+          className="bg-blue-500 text-white px-3 py-1 rounded"
+          onClick={() =>
+            setEducation([
+              ...education,
+              { institution: "", degree: "", start_year: "", end_year: "" },
+            ])
+          }
+        >
           + Add Education
         </button>
 
@@ -197,7 +233,12 @@ export default function CreatePortfolio() {
       {portfolioURL && (
         <div className="mt-6 text-center">
           <p>Your portfolio is live at:</p>
-          <a href={portfolioURL} className="text-blue-600 underline" target="_blank">
+          <a
+            href={portfolioURL}
+            className="text-blue-600 underline"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {portfolioURL}
           </a>
         </div>
