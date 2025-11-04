@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ portfolio.title }}</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; color: #333; }
+    img { border-radius: 50%; width: 120px; height: 120px; }
+    h1, h2, h3 { color: #0056b3; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <img src="{{ portfolio.personal_info.photo_url }}" alt="Profile photo">
+    <h1>{{ portfolio.personal_info.name }}</h1>
+    <p>{{ portfolio.personal_info.contact_email }} | {{ portfolio.personal_info.phone }}</p>
+    <p>
+      <a href="{{ portfolio.personal_info.linkedin }}">LinkedIn</a> |
+      <a href="{{ portfolio.personal_info.github }}">GitHub</a>
+    </p>
+  </div>
+
+  <h2>Education</h2>
+  <ul>
+    {% for edu in portfolio.education %}
+      <li>{{ edu.degree }} - {{ edu.institution }} ({{ edu.start_year }} - {{ edu.end_year }})</li>
+    {% endfor %}
+  </ul>
+
+  <h2>Experience</h2>
+  <ul>
+    {% for exp in portfolio.experience %}
+      <li>
+        <strong>{{ exp.job_title }}</strong> - {{ exp.company }} ({{ exp.start_date }} - {{ exp.end_date }})<br>
+        {{ exp.description }}
+      </li>
+    {% endfor %}
+  </ul>
+
+  <h2>Projects</h2>
+  <ul>
+    {% for project in portfolio.projects %}
+      <li>
+        <a href="{{ project.project_link }}">{{ project.project_name }}</a><br>
+        {{ project.description }}
+      </li>
+    {% endfor %}
+  </ul>
+
+  <h2>Skills</h2>
+  <ul>
+    {% for skill in portfolio.skills %}
+      <li>{{ skill.skill_name }}</li>
+    {% endfor %}
+  </ul>
+</body>
+</html>

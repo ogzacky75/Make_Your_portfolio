@@ -1,6 +1,13 @@
-.venv/
-venv/
-node_modules
-/instance
 __pycache__/
 *.pyc
+.venv/
+venv/
+env/
+node_modules/
+client/.vite/
+client/dist/
+.env
+*.db
+instance/
+client/
+/client

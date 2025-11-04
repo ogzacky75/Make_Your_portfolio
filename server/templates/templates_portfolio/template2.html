@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ portfolio.title }}</title>
+  <style>
+    body { font-family: "Poppins", sans-serif; margin: 0; background: #f3f4f6; color: #333; }
+    .container { width: 80%; margin: 0 auto; padding: 40px 0; }
+    .header { text-align: center; margin-bottom: 40px; }
+    .header img { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; }
+    h1 { margin: 10px 0; color: #111827; }
+    .card { background: #fff; border-radius: 10px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+    h2 { color: #2563eb; margin-bottom: 10px; }
+    ul { list-style: none; padding: 0; margin: 0; }
+    li { margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="{{ portfolio.personal_info.photo_url }}" alt="">
+      <h1>{{ portfolio.personal_info.name }}</h1>
+      <p>{{ portfolio.personal_info.contact_email }} | {{ portfolio.personal_info.phone }}</p>
+      <p>
+        <a href="{{ portfolio.personal_info.linkedin }}">LinkedIn</a> |
+        <a href="{{ portfolio.personal_info.github }}">GitHub</a>
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>Education</h2>
+      <ul>
+        {% for edu in portfolio.education %}
+          <li><strong>{{ edu.degree }}</strong> – {{ edu.institution }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Experience</h2>
+      <ul>
+        {% for exp in portfolio.experience %}
+          <li><strong>{{ exp.job_title }}</strong> – {{ exp.company }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Projects</h2>
+      <ul>
+        {% for project in portfolio.projects %}
+          <li><a href="{{ project.project_link }}">{{ project.project_name }}</a> — {{ project.description }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Skills</h2>
+      <ul>
+        {% for skill in portfolio.skills %}
+          <li>{{ skill.skill_name }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

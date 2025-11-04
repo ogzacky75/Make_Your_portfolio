@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ portfolio.title }}</title>
+  <style>
+    body { font-family: "Segoe UI", sans-serif; margin: 40px; color: #333; background: #fafafa; }
+    header { text-align: center; margin-bottom: 40px; }
+    header img { border-radius: 50%; width: 120px; height: 120px; object-fit: cover; }
+    h1 { margin-top: 10px; color: #222; }
+    section { margin-bottom: 30px; }
+    h2 { color: #004aad; border-bottom: 2px solid #004aad; display: inline-block; }
+    ul { list-style: none; padding: 0; }
+    li { margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="{{ portfolio.personal_info.photo_url }}" alt="Profile photo">
+    <h1>{{ portfolio.personal_info.name }}</h1>
+    <p>{{ portfolio.personal_info.contact_email }} | {{ portfolio.personal_info.phone }}</p>
+    <p>
+      <a href="{{ portfolio.personal_info.linkedin }}">LinkedIn</a> |
+      <a href="{{ portfolio.personal_info.github }}">GitHub</a>
+    </p>
+  </header>
+
+  <section>
+    <h2>Education</h2>
+    <ul>
+      {% for edu in portfolio.education %}
+        <li><strong>{{ edu.degree }}</strong> – {{ edu.institution }} ({{ edu.start_year }}–{{ edu.end_year }})</li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <section>
+    <h2>Experience</h2>
+    <ul>
+      {% for exp in portfolio.experience %}
+        <li>
+          <strong>{{ exp.job_title }}</strong> at {{ exp.company }} ({{ exp.start_date }}–{{ exp.end_date }})<br>
+          {{ exp.description }}
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <section>
+    <h2>Projects</h2>
+    <ul>
+      {% for project in portfolio.projects %}
+        <li>
+          <a href="{{ project.project_link }}">{{ project.project_name }}</a> — {{ project.description }}
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <section>
+    <h2>Skills</h2>
+    <ul>
+      {% for skill in portfolio.skills %}
+        <li>{{ skill.skill_name }}</li>
+      {% endfor %}
+    </ul>
+  </section>
+</body>
+</html>
