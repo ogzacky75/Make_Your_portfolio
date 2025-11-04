@@ -1,25 +1,26 @@
 import { Link } from "react-router-dom";
 import "./LandingPage.css";
 import lpImg from "../assets/lp.png";
+import { Button } from "@/components/ui/Button";
 
 function LandingPage() {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-animate text-gray-100">
       
       <nav className="flex items-center justify-between px-8 py-4 bg-[#0a0014]/70 backdrop-blur-md border-b border-purple-800/40 shadow-lg">
-        <h1 className="text-2xl font-extrabold text-purple-400 tracking-wide">
+        <h1 className="text-2xl font-extrabold text-black tracking-wide">
           MYP
         </h1>
         <div className="space-x-4">
           <Link to="/login">
-            <button className="px-4 py-2 text-sm font-medium bg-purple-600 text-white rounded-lg hover:bg-purple-700 shadow-lg transition">
+            <Button>
               Login
-            </button>
+            </Button>
           </Link>
           <Link to="/signup">
-            <button className="px-4 py-2 text-sm font-medium bg-purple-600 text-white rounded-lg hover:bg-purple-700 shadow-lg transition">
+            <Button>
               Sign Up
-            </button>
+            </Button>
           </Link>
         </div>
       </nav>
