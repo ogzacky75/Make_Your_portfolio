@@ -55,6 +55,7 @@ const Sidebar = ({ isOpen = false, toggleSidebar = () => {} }) => {
     { id: "templates", label: "Templates", icon: "fas fa-palette", path: "/templates" },
     { id: "favorites", label: "Favorites", icon: "fas fa-star", path: "/favorites" },
     { id: "portfolios", label: "My Portfolios", icon: "fas fa-briefcase", path: "/portfolios" },
+    { id: "profile", label: "Profile", icon: "fas fa-user-cog", path: "/profile" }
   ];
 
   const handleButtonClick = (path) => {
@@ -87,11 +88,10 @@ const Sidebar = ({ isOpen = false, toggleSidebar = () => {} }) => {
           ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 w-56`}
       >
         
-        {/* Removed the Portfolio Builder heading section */}
         
         
         <div className="flex-1 py-6 overflow-y-auto">
-          <ul className="space-y-4 px-3"> {/* Changed from space-y-2 to space-y-4 for more spacing */}
+          <ul className="space-y-4 px-3"> 
             {menuItems.map((item) => (
               <li key={item.id}>
                 <button
@@ -137,8 +137,16 @@ const Sidebar = ({ isOpen = false, toggleSidebar = () => {} }) => {
                   <i className="fas fa-user text-white text-sm"></i>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-bold text-gray-800 truncate">{user.name}</p>
-                  <p className="text-xs text-blue-700 truncate font-bold">{user.email}</p>
+                  <button 
+                  
+                    onClick={() => {navigate("/profile");}}
+                    className="text-left w-full"
+                  >
+                    <p className="text-xs text-blue-700 truncate font-bold">{user.email}</p>
+
+                  </button>
+                  
+                  
                 </div>
               </div>
               <button 

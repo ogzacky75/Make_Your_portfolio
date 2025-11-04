@@ -8,26 +8,26 @@
     const [user, setUser] = useState(null);
     const userId = localStorage.getItem("userId");
     const token = localStorage.getItem("token");
-    const BASE_URL = "https://make-your-portfolio.onrender.com"; // ✅ Updated to match login API
+    const BASE_URL = "https://make-your-portfolio.onrender.com"; 
 
     useEffect(() => {
         if (userId && token) {
         axios
             .get(`${BASE_URL}/users/${userId}`, {
-            headers: { Authorization: `Bearer ${token}` }, // ✅ Added JWT token
+            headers: { Authorization: `Bearer ${token}` }, 
             })
             .then((res) => {
             console.log("✅ User data loaded:", res.data);
             setUser(res.data);
             })
             .catch((err) => {
-            console.error("❌ Error fetching user:", err);
+            console.error("Error fetching user:", err);
             alert("Failed to load profile");
-            setUser({}); // ✅ Stop infinite loading
+            setUser({}); 
             });
         } else {
-        console.log("❌ No userId or token found!");
-        setUser({}); // ✅ Stop infinite loading
+        console.log("No user Id or token found!");
+        setUser({}); 
         }
     }, [userId, token]);
 
@@ -56,12 +56,11 @@
             `${BASE_URL}/users/${userId}`,
             updatedData,
             {
-            headers: { Authorization: `Bearer ${token}` }, // ✅ Added JWT token
+            headers: { Authorization: `Bearer ${token}` }, 
             }
         );
 
-        // ✅ Update local state with the returned data
-        setUser(response.data); // ✅ Fixed from response.data.user to response.data
+        setUser(response.data); 
 
         alert("Profile updated successfully!");
         resetForm({ values: { ...values, password: "", confirmPassword: "" } });
@@ -75,7 +74,6 @@
 
     if (!user) return <p>Loading profile...</p>;
     
-    // ✅ Handle case where user object is empty (error state)
     if (Object.keys(user).length === 0) {
         return (
         <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md mt-10">
