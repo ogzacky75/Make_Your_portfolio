@@ -4,10 +4,6 @@ __pycache__/
 venv/
 env/
 node_modules/
-client/.vite/
-client/dist/
 .env
 *.db
 instance/
-client/
-/client
