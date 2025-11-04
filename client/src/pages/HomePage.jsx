@@ -53,14 +53,14 @@ export default function HomePage() {
           >
             <i className="fas fa-bars text-2xl"></i>
           </button>
-          <h1 className="text-xl font-extrabold text-purple-900">Portfolio Generator</h1>
+          <h1 className="text-xl font-extrabold text-purple-900">MYP</h1>
         </div>
 
         <div className="p-6 md:p-8">
           
           <header className="text-center mb-12 bg-gradient-to-r from-pink-200 to-pink-100 rounded-2xl p-8 shadow-2xl border-2 border-pink-300">
             <h1 className="text-4xl md:text-6xl font-black text-gray-800 mb-6 tracking-tight">
-              Welcome To Portfolio Generator
+              Welcome To Make Your Portfolio (MYP)
             </h1>
             <p className="text-xl md:text-2xl text-black max-w-2xl mx-auto leading-relaxed font-bold">
               Create your own customized portfolio with important credentials.
