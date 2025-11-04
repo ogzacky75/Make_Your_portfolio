@@ -94,7 +94,7 @@ npm run dev
 
 # Deployment
 
-Frontend: Hosted on Vercel or Netlify
+Frontend: https://cheerful-lokum-f6916c.netlify.app/
 
 Backend: https://make-your-portfolio.onrender.com
 
