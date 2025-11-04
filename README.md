@@ -1,26 +1,125 @@
-# Make_Your_portfolio
+# Make_Your_Portfolio
 
-Make Your Portfolio is a dynamically generating portfolio app where users input their professional details and a portfolio is generated afterwards
+Make Your Portfolio is a web application that helps users quickly create a personalized portfolio website.
+All you have to do is fill in your personal and professional details, and the app will automatically generate a complete portfolio using your chosen template.
 
-# client
+# Technologies Used
+Frontend (Client)
 
-On the client side, we have used vite-react to generate the ui-ux and make pages feel responsive and smooth 
+Vite + React.js – for a fast and modern frontend
 
-# Pages
+Tailwind CSS – for beautiful, responsive designs
 
-Our app contains multiple pages
+React Router DOM – for smooth page navigation
 
-1. Landing page
-2. Login page
-3. Signup page
-4. Homepage
-5. Templates page
-6. Favorites page
-7. My portfolios page
-8. Create portfolios page
-9. And the page for your created portfolio
+Backend (Server)
 
-# How our client-side works
+Flask (Python) – RESTful API for handling data
 
-When you open the link to our application's site you are directed to the landing page where you can choose to login or signup for an account. Once you are signed in to 
-the web application you will be redirected to the homepage where you can see and search for templates 
+Flask SQLAlchemy – database ORM
+
+Flask Migrate – database migrations
+
+PostgreSQL – database
+
+Render – backend hosting
+
+# App Pages
+
+The app includes the following pages:
+
+Landing Page – Welcome screen where users can log in or sign up
+
+Login Page – For existing users to sign in
+
+Signup Page – For new users to create an account
+
+Homepage – Shows templates and quick actions
+
+Templates Page – View and choose from available portfolio templates
+
+Favorites Page – Saved templates you like
+
+My Portfolios Page – Displays all your created portfolios
+
+Create Portfolio Page – Fill in your personal info, education, projects, and skills
+
+Portfolio Page – Displays your final generated portfolio
+
+# How It Works
+
+Start at the Landing Page and choose to log in or sign up.
+
+Once logged in, you’ll land on the Homepage, where you can browse templates.
+
+Pick a template that fits your style from the Templates Page.
+
+Go to Create Portfolio, fill in your details, and generate your portfolio.
+
+Your custom portfolio will be created instantly — complete with your information and chosen template.
+
+You can view, save, or favorite templates for future use.
+
+# Database Overview
+
+The backend uses PostgreSQL, and the database includes:
+
+Users – stores user accounts
+
+Templates – contains available portfolio templates
+
+Favorites – stores user-saved templates
+
+Portfolios – generated portfolio data
+
+Education, Experience, Projects, Skills, Personal Info – detailed sections of a portfolio
+
+# How to Run the Project
+
+# Backend Setup
+
+cd server
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+flask db upgrade
+python3 seed.py
+flask run
+
+# Frontend Setup
+
+cd client
+npm install
+npm run dev
+
+# Deployment
+
+Frontend: Hosted on Vercel or Netlify
+
+Backend: https://make-your-portfolio.onrender.com
+
+Database: PostgreSQL on Render
+
+# Features
+
+User authentication (Login/Signup)
+Portfolio generation from templates
+Template previews and favorites
+Editable portfolio information
+Responsive design
+PostgreSQL database for persistence
+
+# Future Improvements
+
+Allow users to upload custom templates
+Add drag-and-drop portfolio customization
+Enable direct portfolio hosting with custom links
+Add AI-assisted bio and project description suggestions
+
+# Team
+
+Project by:
+
+Isaac Ogutu – Full Stack Developer
+Brenda Ngunjiri - Full Stack Developer
+Mathu Alex - Full Stack Developer
