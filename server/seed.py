@@ -12,7 +12,6 @@ app = create_app()
 
 
 def generate_unique_slug(username):
-    """Generate a unique slug using username + random ID."""
     unique_part = uuid4().hex[:6]
     return f"{username.lower().replace(' ', '-')}-{unique_part}"
 
@@ -26,33 +25,37 @@ def seed_users():
     ]
     db.session.add_all(users)
     db.session.commit()
-    print("✅ Users seeded successfully.")
+    print("Users seeded successfully.")
 
 def seed_templates():
     templates = [
         Template(
             name='Modern Portfolio',
-            image='https://yourcdn.com/images/modern.png',
+            image='assets/t1.png',
             description='A sleek and modern portfolio template perfect for showcasing your work.',
-            preview_url='/templates/modern'
+            preview_url='/templates/modern',
+            file_path='templates_portfolio/template1.html'
         ),
         Template(
             name='Creative Portfolio',
-            image='https://yourcdn.com/images/creative.png',
+            image='assets/t2.png',
             description='A vibrant and creative portfolio template designed to highlight your unique style.',
-            preview_url='/templates/creative'
+            preview_url='/templates/creative',
+            file_path='templates_portfolio/template2.html'
         ),
         Template(
             name='Professional Portfolio',
-            image='https://yourcdn.com/images/professional.png',
+            image='assets/t3.png',
             description='A clean and professional portfolio template ideal for business presentations.',
-            preview_url='/templates/professional'
+            preview_url='/templates/professional',
+            file_path='templates_portfolio/template3.html'
         ),
         Template(
             name='Developer Portfolio',
-            image='https://yourcdn.com/images/developer.png',
+            image='assets/t4.png',
             description='A technical and structured portfolio template tailored for developers.',
-            preview_url='/templates/developer'
+            preview_url='/templates/developer',
+            file_path='templates_portfolio/template4.html'
         )
     ]
     db.session.add_all(templates)

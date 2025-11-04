@@ -41,6 +41,7 @@ class Template(db.Model, SerializerMixin):
     image = db.Column(db.Text)
     description = db.Column(db.Text)
     preview_url = db.Column(db.Text)
+    file_path = db.Column(db.String)
 
     favorites = db.relationship('Favorite', back_populates='template', cascade='all, delete-orphan')
     portfolios = db.relationship('Portfolio', back_populates='template', cascade='all, delete-orphan')
