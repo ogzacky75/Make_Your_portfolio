@@ -29,7 +29,7 @@ function LandingPage() {
         
         <div className="md:w-1/2 space-y-6 text-center md:text-left">
           <h2 className="text-4xl md:text-5xl font-extrabold leading-tight text-white">
-            <span className="text-purple">Create.</span> Grow Your Career.
+            <span className="text-black">Create.</span> Grow Your Career.
           </h2>
           <p className="text-gray text-lg max-w-md mx-auto md:mx-0">
             Build a stunning portfolio with{" "}
