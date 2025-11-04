@@ -39,7 +39,7 @@ export default function Favorites() {
 
       <div className={`flex-1 transition-all duration-300 ${sidebarOpen ? "md:ml-64" : "ml-0 md:ml-64"}`}>
         
-        {/* Mobile Header */}
+      
         <div className="p-4 bg-white/90 backdrop-blur-sm shadow-lg flex items-center justify-between md:hidden">
           <button 
             onClick={() => setSidebarOpen(true)} 
@@ -52,7 +52,7 @@ export default function Favorites() {
 
         <div className="p-6 md:p-8">
           
-          {/* Favorites Grid - Direct start without any header */}
+         
           {favorites.length === 0 ? (
             <div className="text-center py-16 bg-white/95 backdrop-blur-md rounded-xl shadow-xl border-2 border-white/30">
               <i className="fas fa-heart text-5xl text-purple-700 mb-6 opacity-70"></i>
