@@ -1,8 +1,8 @@
-"""Add file_path to Template
+"""Initial migration with file_path
 
-Revision ID: db77026ade62
+Revision ID: 0ddfdbd400aa
 Revises: 
-Create Date: 2025-11-04 03:36:52.026851
+Create Date: 2025-11-04 04:10:15.663371
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'db77026ade62'
+revision = '0ddfdbd400aa'
 down_revision = None
 branch_labels = None
 depends_on = None
