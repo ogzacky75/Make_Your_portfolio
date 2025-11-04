@@ -1,8 +1,6 @@
 .venv/
 venv/
 node_modules
-server/
-/server
 /instance
 __pycache__/
 *.pyc
