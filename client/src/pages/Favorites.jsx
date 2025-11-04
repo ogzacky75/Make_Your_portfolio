@@ -21,9 +21,9 @@ export default function Favorites() {
   };
 
   return (
-    <div >
+    <div className="flex min-h-screen bg-gradient-to-br from-[#0a0014] via-[#120027] to-[#1e003a] text-gray-100">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={setSidebarOpen} />
-      <div className="">
+      <div className="flex-1 p-10 ml-0 md:ml-64">
         <div className="p-8 grid grid-cols-1 md:grid-cols-3 gap-6">
           
           {favorites.map((fav) => (

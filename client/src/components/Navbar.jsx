@@ -12,12 +12,12 @@ const Navbar = ({ setIsAuthenticated }) => {
   };
 
   return (
-    <nav className="bg-gray-800 shadow-lg">
+    <nav className="bg-white shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-evenly items-center h-16">
           <Link
             to="/home"
-            className="text-white text-xl font-bold hover:text-gray-300 transition duration-300"
+            className="text-gray text-xl font-bold hover:text-gray-300 transition duration-300"
           >
             MYP
           </Link>
