@@ -29,11 +29,11 @@ function LandingPage() {
         
         <div className="md:w-1/2 space-y-6 text-center md:text-left">
           <h2 className="text-4xl md:text-5xl font-extrabold leading-tight text-white">
-            <span className="text-purple-400">Create.</span> Grow Your Career.
+            <span className="text-purple">Create.</span> Grow Your Career.
           </h2>
-          <p className="text-gray-300 text-lg max-w-md mx-auto md:mx-0">
+          <p className="text-gray text-lg max-w-md mx-auto md:mx-0">
             Build a stunning portfolio with{" "}
-            <span className="font-semibold text-purple-400">Make Your Portfolio (MYP)</span> — and unlock your full career potential.
+            <span className="font-semibold text-purple">Make Your Portfolio (MYP)</span> — and unlock your full career potential.
           </p>
 
           <div className="flex justify-center md:justify-start space-x-4 pt-4">
@@ -43,7 +43,7 @@ function LandingPage() {
               </Button>
             </Link>
             <Link to="/login">
-              <button className="px-6 py-3 border border-purple-500 text-purple-400 rounded-lg text-lg font-medium hover:bg-purple-800/60 hover:shadow-inner transition">
+              <button className="px-6 py-3 border border-purple text-purple rounded-lg text-lg font-medium hover:bg-purple-800/60 hover:shadow-inner transition">
                 Login
               </button>
             </Link>
