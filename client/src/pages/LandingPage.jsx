@@ -38,9 +38,9 @@ function LandingPage() {
 
           <div className="flex justify-center md:justify-start space-x-4 pt-4">
             <Link to="/signup">
-              <button className="px-6 py-3 bg-purple-600 text-white rounded-lg text-lg font-medium hover:bg-purple-700 hover:shadow-purple-500/40 hover:shadow-lg transition">
+              <Button>
                 Sign Up For Free
-              </button>
+              </Button>
             </Link>
             <Link to="/login">
               <button className="px-6 py-3 border border-purple-500 text-purple-400 rounded-lg text-lg font-medium hover:bg-purple-800/60 hover:shadow-inner transition">
