@@ -23,7 +23,7 @@ export default function Favorites() {
   return (
     <div >
       <Sidebar isOpen={sidebarOpen} toggleSidebar={setSidebarOpen} />
-      <div className="">
+      <div className="flex-1 p-10 ml-0 md:ml-64">
         <div className="p-8 grid grid-cols-1 md:grid-cols-3 gap-6">
           
           {favorites.map((fav) => (
